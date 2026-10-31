@@ -199,6 +199,30 @@ svg { display: block; }
 .head__vtb { width: 64px; margin-left: 4px; opacity: .95; }
 .head__vtb svg { width: 100%; height: auto; }
 
+/* Реквизиты карт и справка по кешбэку */
+.cardsheet { position: relative; padding: 34px 18px 28px; display: grid; gap: 14px; }
+.cardsheet__t { font-size: 24px; font-weight: 600; padding-right: 44px; }
+.sheet__grab--dark { background: #d6d9e2 !important; }
+.sheet__close--dark { background: var(--tile) !important; color: var(--ink) !important; }
+.bank-card { position: relative; aspect-ratio: 1.586; max-width: 100%; border-radius: 20px; padding: 18px; color: #fff; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;
+  background: radial-gradient(80% 90% at 90% 10%, rgba(32,182,255,.7), transparent 60%), linear-gradient(135deg, #0a1f8e, #1a5cff); box-shadow: 0 14px 30px rgba(13, 47, 180, .3); }
+.bank-card--pk { background: radial-gradient(80% 90% at 90% 10%, rgba(255,160,240,.6), transparent 60%), linear-gradient(135deg, #3b2a9e, #8b5cff); }
+.bank-card__top { display: flex; justify-content: space-between; align-items: center; font-size: 13px; opacity: .9; }
+.bank-card__vtb svg { height: 22px; width: auto; }
+.bank-card__num { font-size: 22px; font-weight: 500; letter-spacing: 1.5px; font-variant-numeric: tabular-nums; }
+.bank-card__bottom { display: flex; justify-content: space-between; align-items: flex-end; font-size: 15px; font-variant-numeric: tabular-nums; }
+.bank-card__bottom b { font-size: 18px; font-style: italic; letter-spacing: .5px; }
+.req { background: var(--tile); border-radius: 20px; padding: 4px 16px; }
+.req > div { display: flex; align-items: center; gap: 10px; padding: 12px 0; font-size: 15px; }
+.req > div + div { border-top: 1px solid var(--line); }
+.req span { color: var(--muted); flex: 1; }
+.req b { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+.req .link-btn { font-size: 14px; }
+.blur { filter: blur(6px); user-select: none; }
+.qty small { display: block; font-size: 12.5px; font-weight: 400; color: var(--muted); margin-top: 2px; }
+.summary .note { color: var(--muted); font-size: 13px; }
+.cardpill { color: #fff; }
+
 /* Баннер */
 .banner {
   position: relative; display: block; width: calc(100% - 36px); margin: 10px 18px 0; min-height: 170px; border-radius: var(--r-tile); overflow: hidden;
@@ -294,7 +318,7 @@ svg { display: block; }
 
 /* Выгода */
 .tiles2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.tile { background: var(--tile); border-radius: var(--r-tile); padding: 18px; min-height: 130px; display: flex; flex-direction: column; justify-content: space-between; }
+.tile { width: 100%; text-align: left; background: var(--tile); border-radius: var(--r-tile); padding: 18px; min-height: 130px; display: flex; flex-direction: column; justify-content: space-between; }
 .tile__t { font-size: 17px; font-weight: 500; display: flex; justify-content: space-between; line-height: 1.2; }
 .tile__v { font-size: 30px; font-weight: 600; letter-spacing: -.02em; }
 .tile-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--tile); border-radius: var(--r-tile); padding: 18px; margin-top: 10px; font-size: 16px; font-weight: 500; line-height: 1.3; }
@@ -454,8 +478,8 @@ svg { display: block; }
               <div class="hero__label">Пушкинская карта <button class="dots" aria-hidden="true" tabindex="-1">⋮</button></div>
               <div class="hero__sum"><span id="balanceSum"></span><button class="eye" id="eyeBtn" aria-label="Скрыть остаток"><svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
               <div class="cardrow">
-                <span class="cardpill"><i class="mini-card mini-card--pk">МИР</i>Пушкинская</span>
-                <span class="cardpill"><i class="mini-card">ВТБ</i>4821</span>
+                <button class="cardpill" data-card="pk"><i class="mini-card mini-card--pk">МИР</i>Пушкинская</button>
+                <button class="cardpill" data-card="vtb"><i class="mini-card">ВТБ</i><span id="vtbLast4"></span></button>
               </div>
 
               <div class="glass-grid">
@@ -578,13 +602,13 @@ window.VTB_DATA = {
   today: "2026-10-30",
 
   user: {
-    name: "Александр",
+    name: "Гость",
     age: 20,
     city: "Санкт-Петербург",
     pushkin: { limit: 5000, cinemaLimit: 2000, spent: 2600, cinemaSpent: 800, expires: "2026-12-31" },
     vtbCard: "•• 4821",
     cashbackMonthCap: 1000,
-    cashbackEarned: 180
+    cashbackEarned: 0
   },
 
   categories: [
@@ -793,7 +817,7 @@ window.VTB_DATA = {
   // Живая дата, пока идёт сезон; иначе — дата снимка афиши
   var TODAY = NOW < new Date(D.user.pushkin.expires + "T23:59") && NOW > new Date(D.today) ? NOW : new Date(D.today + "T12:00");
   var CASHBACK = 0.05;
-  var STORE_KEY = "vtb-kultura-state-v2";
+  var STORE_KEY = "vtb-kultura-state-v3";
   var LEVELS = [
     { name: "Зритель", from: 0, orb: 1 },
     { name: "Ценитель", from: 3, orb: 2 },
@@ -805,6 +829,19 @@ window.VTB_DATA = {
     return { spent: D.user.pushkin.spent, cinemaSpent: D.user.pushkin.cinemaSpent, cashback: D.user.cashbackEarned, saved: 0, tickets: [], applied: {}, remind: true, cat: "all", fit: false, hide: false, q: "" };
   }
   var state = load();
+  if (!state.cards) { state.cards = { pk: demoCard("2200"), vtb: demoCard("2200") }; save(); }
+
+  /* Демо-реквизиты: случайные цифры, контрольная сумма Луна намеренно неверная —
+     такой номер не может принадлежать реальной карте */
+  function demoCard(bin) {
+    var n = bin, i;
+    for (i = 0; i < 11; i++) n += Math.floor(Math.random() * 10);
+    var sum = 0;
+    for (i = 0; i < 15; i++) { var x = +n[i]; if (i % 2 === 0) { x *= 2; if (x > 9) x -= 9; } sum += x; }
+    n += (((10 - sum % 10) % 10) + 1) % 10;
+    var m = 1 + Math.floor(Math.random() * 12), y = 28 + Math.floor(Math.random() * 3);
+    return { num: n, exp: (m < 10 ? "0" : "") + m + "/" + y, cvc: String(100 + Math.floor(Math.random() * 900)) };
+  }
   function load() {
     try {
       var raw = localStorage.getItem(STORE_KEY);
@@ -828,6 +865,7 @@ window.VTB_DATA = {
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function plural(n, a, b, c) { var m = n % 10, h = n % 100; return m === 1 && h !== 11 ? a : m >= 2 && m <= 4 && (h < 10 || h >= 20) ? b : c; }
 
+  var last4 = function (k) { return state.cards[k].num.slice(-4); };
   var balance = function () { return Math.max(0, D.user.pushkin.limit - state.spent); };
   var daysLeft = function () { return Math.ceil((d(D.user.pushkin.expires + "T23:59") - TODAY) / 864e5); };
   var discounted = function (ev) { return Math.round(ev.price * (1 - ev.vtbDiscount / 100)); };
@@ -1033,15 +1071,22 @@ window.VTB_DATA = {
   function openEvent(id) {
     var ev = findEv(id);
     if (!ev) return;
-    buy = { ev: ev, date: upcomingDates(ev)[0], qty: 1, pay: discounted(ev) <= balance() ? "pk" : "vtb" };
+    buy = { ev: ev, date: upcomingDates(ev)[0], qty: 1, pay: pkFits(ev) ? "pk" : "vtb" };
     renderSheet();
     $("#sheet").hidden = false;
+  }
+  // По Пушкинской карте — один билет: проверяем, хватает ли остатка на него
+  function pkFits(ev) {
+    var unit = discounted(ev), cinemaLeft = D.user.pushkin.cinemaLimit - state.cinemaSpent;
+    return ev.pushkin && unit <= balance() && (ev.cat !== "cinema" || unit <= cinemaLeft);
   }
   function renderSheet() {
     var ev = buy.ev, unit = discounted(ev), total = unit * buy.qty, full = ev.price * buy.qty;
     var cinemaLeft = D.user.pushkin.cinemaLimit - state.cinemaSpent;
-    var pkOk = ev.pushkin && total <= balance() && (ev.cat !== "cinema" || total <= cinemaLeft);
+    var pkOk = pkFits(ev);
     if (buy.pay === "pk" && !pkOk) buy.pay = "vtb";
+    if (buy.pay === "pk" && buy.qty > 1) buy.qty = 1;
+    unit = discounted(ev); total = unit * buy.qty; full = ev.price * buy.qty;
     var cb = buy.pay === "vtb" ? Math.min(Math.round(total * CASHBACK), Math.max(0, D.user.cashbackMonthCap - state.cashback)) : 0;
 
     $("#sheetPanel").innerHTML =
@@ -1053,18 +1098,19 @@ window.VTB_DATA = {
       '<div class="opt-title">Дата и время</div><div class="dates">' +
       upcomingDates(ev).map(function (x) { return '<button class="date-btn' + (x === buy.date ? " is-on" : "") + '" data-date="' + x + '">' + dateLabel(ev, x) + '</button>'; }).join("") +
       '</div>' +
-      '<div class="qty"><span>Билеты</span><div class="qty__ctrl"><button data-qty="-1" aria-label="Меньше">−</button><b>' + buy.qty + '</b><button data-qty="1" aria-label="Больше">+</button></div></div>' +
+      '<div class="qty"><span>Билеты' + (buy.pay === "pk" ? '<small>По Пушкинской карте — 1 билет. Больше — картой ВТБ</small>' : "") + '</span><div class="qty__ctrl"><button data-qty="-1" aria-label="Меньше">−</button><b>' + buy.qty + '</b><button data-qty="1" aria-label="Больше">+</button></div></div>' +
       '<div class="opt-title">Способ оплаты</div>' +
       '<button class="pay' + (buy.pay === "pk" ? " is-on" : "") + '" data-pay="pk"' + (pkOk ? "" : " disabled") + '>' +
-      '<i class="mini-card mini-card--pk">МИР</i><span class="pay__txt">Пушкинская карта<small>' + (ev.pushkin ? (pkOk ? "Остаток " + rub(balance()) + (ev.cat === "cinema" ? ", на кино " + rub(cinemaLeft) : "") : ev.cat === "cinema" && total > cinemaLeft ? "Лимит на кино: осталось " + rub(cinemaLeft) : "Не хватает остатка — " + rub(balance())) : "Событие не участвует в программе") + '</small></span></button>' +
+      '<i class="mini-card mini-card--pk">МИР</i><span class="pay__txt">Пушкинская карта<small>' + (ev.pushkin ? (pkOk ? "1 билет · остаток " + rub(balance()) + (ev.cat === "cinema" ? ", на кино " + rub(cinemaLeft) : "") + " · без кешбэка" : ev.cat === "cinema" && unit > cinemaLeft ? "Лимит на кино: осталось " + rub(cinemaLeft) : "Не хватает остатка — " + rub(balance())) : "Событие не участвует в программе") + '</small></span></button>' +
       '<button class="pay' + (buy.pay === "vtb" ? " is-on" : "") + '" data-pay="vtb">' +
-      '<i class="mini-card">ВТБ</i><span class="pay__txt">Карта ВТБ ' + D.user.vtbCard + '<small>Кешбэк 5% на культуру · до ' + rub(D.user.cashbackMonthCap) + ' в мес.</small></span></button>' +
+      '<i class="mini-card">ВТБ</i><span class="pay__txt">Карта ВТБ •• ' + last4("vtb") + '<small>Любое число билетов · кешбэк 5% вернётся на карту</small></span></button>' +
       '<div class="summary">' +
       '<div><span>' + buy.qty + ' × ' + rub(ev.price) + '</span><span>' + rub(full) + '</span></div>' +
       (ev.vtbDiscount ? '<div class="hl"><span>Скидка клиентам ВТБ −' + ev.vtbDiscount + '%</span><span>−' + rub(full - total) + '</span></div>' : "") +
-      (cb ? '<div class="hl"><span>Вернётся кешбэком</span><span>+' + rub(cb) + '</span></div>' : "") +
+      (cb ? '<div class="hl"><span>Вернётся кешбэком на карту ВТБ</span><span>+' + rub(cb) + '</span></div>' : "") +
+      (buy.pay === "pk" ? '<div class="note"><span>Кешбэк за оплату Пушкинской картой не начисляется</span></div>' : "") +
       '<div class="total"><span>К оплате</span><span>' + rub(total) + '</span></div>' +
-      '</div></div>' +
+      '</div><button class="link-btn" data-info="cashback">Как работает кешбэк ВТБ Культуры ›</button></div>' +
       '<div class="sheet__cta"><button class="btn btn--primary btn--block" id="payBtn">Оплатить ' + rub(total) + '</button></div>';
     $("#payBtn").onclick = function () { pay(total, full - total, cb); };
   }
@@ -1086,6 +1132,61 @@ window.VTB_DATA = {
     renderAll();
   }
   function closeSheet() { $("#sheet").hidden = true; buy = null; }
+
+  /* ---------- Реквизиты карт (демо) ---------- */
+  var revealed = false;
+  function openSheetHTML(html) { $("#sheetPanel").innerHTML = html; $("#sheet").hidden = false; buy = null; }
+  function groups(n) { return n.replace(/(\d{4})(?=\d)/g, "$1 "); }
+  function openCard(k) {
+    var c = state.cards[k], pk = k === "pk", cinemaLeft = D.user.pushkin.cinemaLimit - state.cinemaSpent;
+    var hidden = function (v) { return revealed ? v : '<span class="blur">' + v + '</span>'; };
+    var rows = [
+      ["Номер карты", hidden(groups(c.num)), c.num],
+      ["Срок действия", hidden(c.exp), c.exp],
+      ["CVC/CVV", hidden(c.cvc), null],
+      ["Владелец", "GUEST CLIENT", null]
+    ];
+    openSheetHTML(
+      '<div class="cardsheet"><span class="sheet__grab sheet__grab--dark"></span><button class="sheet__close sheet__close--dark" data-close aria-label="Закрыть">×</button>' +
+      '<h3 class="cardsheet__t">' + (pk ? "Пушкинская карта" : "Карта ВТБ") + '</h3>' +
+      '<div class="bank-card' + (pk ? " bank-card--pk" : "") + '">' +
+      '<span class="bank-card__top"><span class="bank-card__vtb">' + vtbLogo("#fff") + '</span><span>' + (pk ? "Пушкинская карта" : "Дебетовая") + '</span></span>' +
+      '<span class="bank-card__num">' + (revealed ? groups(c.num) : "•••• •••• •••• " + c.num.slice(-4)) + '</span>' +
+      '<span class="bank-card__bottom"><span>' + (revealed ? c.exp : "••/••") + '</span><b>МИР</b></span></div>' +
+      '<button class="btn btn--soft btn--block" data-reveal="' + k + '">' + (revealed ? "Скрыть реквизиты" : "Показать реквизиты") + '</button>' +
+      '<div class="req">' + rows.map(function (r) {
+        return '<div><span>' + r[0] + '</span><b>' + r[1] + '</b>' + (r[2] && revealed ? '<button class="link-btn" data-copy="' + r[2] + '">Копировать</button>' : "") + '</div>';
+      }).join("") + '</div>' +
+      (pk
+        ? '<div class="req"><div><span>Остаток лимита</span><b>' + rub(balance()) + '</b></div><div><span>Из них на кино</span><b>' + rub(cinemaLeft) + '</b></div><div><span>Сгорает</span><b>31 декабря</b></div><div><span>Билетов за покупку</span><b>1</b></div></div>'
+        : '<div class="req"><div><span>Кешбэк на культуру</span><b>5%, до ' + rub(D.user.cashbackMonthCap) + ' в мес.</b></div><div><span>Начислено в этом месяце</span><b>' + rub(state.cashback) + '</b></div></div>') +
+      '<p class="source-note">Демо-реквизиты: номер сгенерирован случайно и не принадлежит реальной карте.</p></div>');
+  }
+  function copyText(v) {
+    try {
+      navigator.clipboard.writeText(v).then(function () { toast("Скопировано"); }, function () { toast(v); });
+    } catch (e) { toast(v); }
+  }
+  function openCashbackInfo() {
+    var left = Math.max(0, D.user.cashbackMonthCap - state.cashback);
+    var ops = state.tickets.filter(function (t) { return t.pay === "vtb"; });
+    openSheetHTML(
+      '<div class="cardsheet"><span class="sheet__grab sheet__grab--dark"></span><button class="sheet__close sheet__close--dark" data-close aria-label="Закрыть">×</button>' +
+      '<h3 class="cardsheet__t">Кешбэк 5% на культуру</h3>' +
+      '<div class="tiles2"><div class="tile"><span class="tile__t">Начислено</span><span class="tile__v">' + rub(state.cashback) + '</span></div><div class="tile"><span class="tile__t">Можно ещё</span><span class="tile__v">' + rub(left) + '</span></div></div>' +
+      '<div class="journey">' +
+      '<div><em>Что</em>5% от суммы билета возвращаются рублями на карту ВТБ</div>' +
+      '<div><em>Когда</em>При оплате билета в ВТБ Культуре картой ВТБ: театры, музеи, концерты, кино</div>' +
+      '<div><em>Лимит</em>До ' + rub(D.user.cashbackMonthCap) + ' в месяц, зачисление вместе с выпиской</div>' +
+      '<div><em>Нет</em>За оплату Пушкинской картой кешбэк не начисляется: это деньги государственной программы</div>' +
+      '</div>' +
+      '<div class="opt-title">Начисления</div>' +
+      (ops.length ? '<div class="req">' + ops.map(function (t) {
+        var ev = findEv(t.ev);
+        return '<div><span>' + esc(ev ? ev.title : "Билет") + '</span><b>+' + rub(Math.round(t.total * CASHBACK)) + '</b></div>';
+      }).join("") + '</div>' : '<div class="empty">Пока нет начислений. Купите билет картой ВТБ — 5% вернутся на карту.</div>') +
+      '</div>');
+  }
 
   /* ---------- ART Pass ---------- */
   function renderArtPass() {
@@ -1132,10 +1233,11 @@ window.VTB_DATA = {
     $("#ticketList").innerHTML = state.tickets.map(function (t) {
       var ev = findEv(t.ev);
       if (!ev) return "";
-      return '<div class="ticket"><div class="ticket__head">' + cover(ev) + '<div><b>' + esc(ev.title) + '</b><span>' + esc(ev.venue) + '</span></div></div>' +
+      var head = ev.cat === "cinema" ? '<div class="ticket__head" style="background:linear-gradient(120deg,' + ev.poster.c[1] + ',' + ev.poster.c[2] + ')">' : '<div class="ticket__head">' + cover(ev);
+      return '<div class="ticket">' + head + '<div><b>' + esc(ev.title) + '</b><span>' + esc(ev.venue) + '</span></div></div>' +
         '<div class="ticket__body">' + qr(t.id) + '<div class="ticket__info">' +
         '<b>' + dateLabel(ev, t.date) + '</b><br>' + t.qty + ' ' + plural(t.qty, "билет", "билета", "билетов") + ' · ' + rub(t.total) + '<br>' +
-        (t.pay === "pk" ? "Пушкинская карта" : "Карта ВТБ " + D.user.vtbCard) + '<br>' + esc(ev.address) +
+        (t.pay === "pk" ? "Пушкинская карта" : "Карта ВТБ •• " + last4("vtb")) + '<br>' + esc(ev.address) +
         '</div></div></div>';
     }).join("");
   }
@@ -1160,7 +1262,7 @@ window.VTB_DATA = {
       '<section class="block block--overlap">' +
       '<div class="tiles2">' +
       '<button class="tile" data-go="tickets"><span class="tile__t">Скидки<br>на билеты <span>›</span></span><span class="tile__v">' + rub(state.saved) + '</span></button>' +
-      '<div class="tile"><span class="tile__t">Кешбэк 5% <span>›</span></span><span class="tile__v">' + rub(state.cashback) + '</span></div>' +
+      '<button class="tile" data-info="cashback"><span class="tile__t">Кешбэк 5% <span>›</span></span><span class="tile__v">' + rub(state.cashback) + '</span></button>' +
       '</div>' +
       '<div class="tile-row"><span>Подберите события<br>на остаток карты</span><button class="btn btn--primary" data-story="fit">Выбрать</button></div>' +
       '</section>' +
@@ -1240,7 +1342,7 @@ window.VTB_DATA = {
 
   /* ---------- События ---------- */
   document.addEventListener("click", function (e) {
-    var t = e.target.closest("[data-cat],[data-ev],[data-go],[data-goto],[data-close],[data-date],[data-qty],[data-pay],[data-apply],[data-story]");
+    var t = e.target.closest("[data-cat],[data-ev],[data-go],[data-goto],[data-close],[data-date],[data-qty],[data-pay],[data-apply],[data-story],[data-card],[data-info],[data-reveal],[data-copy]");
     if (!t) return;
     if (t.dataset.cat) { state.cat = t.dataset.cat; save(); renderAfisha(); }
     else if (t.dataset.ev) openEvent(t.dataset.ev);
@@ -1249,8 +1351,16 @@ window.VTB_DATA = {
     else if (t.dataset.goto) { closeSheet(); go(t.dataset.goto); }
     else if (t.hasAttribute("data-close")) closeSheet();
     else if (t.dataset.date) { buy.date = t.dataset.date; renderSheet(); }
-    else if (t.dataset.qty) { buy.qty = Math.min(6, Math.max(1, buy.qty + Number(t.dataset.qty))); renderSheet(); }
-    else if (t.dataset.pay && !t.disabled) { buy.pay = t.dataset.pay; renderSheet(); }
+    else if (t.dataset.qty) {
+      var q = Math.min(6, Math.max(1, buy.qty + Number(t.dataset.qty)));
+      if (q > 1 && buy.pay === "pk") { buy.pay = "vtb"; toast("Больше одного билета — только картой ВТБ"); }
+      buy.qty = q; renderSheet();
+    }
+    else if (t.dataset.pay && !t.disabled) { buy.pay = t.dataset.pay; if (buy.pay === "pk" && buy.qty > 1) toast("По Пушкинской карте — 1 билет"); renderSheet(); }
+    else if (t.dataset.card) { revealed = false; openCard(t.dataset.card); }
+    else if (t.dataset.info) openCashbackInfo();
+    else if (t.hasAttribute("data-reveal")) { revealed = !revealed; openCard(t.dataset.reveal); }
+    else if (t.dataset.copy) copyText(t.dataset.copy);
     else if (t.dataset.apply) { state.applied[t.dataset.apply] = true; save(); renderArtPass(); toast("Заявка принята — результат розыгрыша придёт пушем"); }
   });
   $("#fitToggle").addEventListener("change", function (e) { state.fit = e.target.checked; save(); renderAfisha(); });
@@ -1277,6 +1387,7 @@ window.VTB_DATA = {
   $$('[data-art="pass"]').forEach(function (el) { el.innerHTML = art("pass", "none"); });
   $$('[data-art="gift"]').forEach(function (el) { el.innerHTML = art("gift", "none"); });
   $("#userName").textContent = D.user.name;
+  $("#vtbLast4").textContent = last4("vtb");
   $("#clock").textContent = fmtTime.format(NOW);
   renderAll();
   setTimeout(showPush, 1900);
