@@ -226,6 +226,7 @@ svg { display: block; }
 .req b { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
 .req .link-btn { font-size: 14px; }
 .blur { filter: blur(6px); user-select: none; }
+.search-note { font-size: 14px; color: var(--muted); background: var(--tile); border-radius: 14px; padding: 10px 14px; }
 .qty small { display: block; font-size: 12.5px; font-weight: 400; color: var(--muted); margin-top: 2px; }
 .summary .note { color: var(--muted); font-size: 13px; }
 .cardpill { color: #fff; }
@@ -1096,12 +1097,12 @@ window.VTB_DATA = {
     }
     return total;
   }
-  function filtered() {
+  function filtered(anyCategory) {
     var b = balance(), q = state.q.trim();
     var list = D.events
       .filter(function (ev) { return upcomingDates(ev).length; })
-      .filter(function (ev) { return state.cat === "discount" ? ev.vtbDiscount > 0 : state.cat === "all" || ev.cat === state.cat; })
-      .filter(function (ev) { return !state.fit || (ev.pushkin && discounted(ev) <= b && (ev.cat !== "cinema" || discounted(ev) <= D.user.pushkin.cinemaLimit - state.cinemaSpent)); });
+      .filter(function (ev) { return anyCategory || state.cat === "discount" ? ev.vtbDiscount > 0 : state.cat === "all" || ev.cat === state.cat; })
+      .filter(function (ev) { return anyCategory || !state.fit || (ev.pushkin && discounted(ev) <= b && (ev.cat !== "cinema" || discounted(ev) <= D.user.pushkin.cinemaLimit - state.cinemaSpent)); });
     if (!q) return list.sort(function (a, b2) { return firstDate(a) - firstDate(b2); });
     return list
       .map(function (ev) { return { ev: ev, s: matchScore(ev, q) }; })
@@ -1132,11 +1133,15 @@ window.VTB_DATA = {
     renderCinema();
     renderChips();
     $("#fitToggle").checked = state.fit;
-    var list = filtered();
+    var list = filtered(), elsewhere = false;
+    // Поиск не должен упираться в выбранный фильтр: если в категории пусто, ищем по всей афише
+    if (!list.length && state.q.trim() && (state.cat !== "all" || state.fit)) { list = filtered(true); elsewhere = list.length > 0; }
+    var inp = $("#searchInput");
+    if (inp && document.activeElement !== inp && inp.value !== state.q) inp.value = state.q;
     $("#listTitle").textContent = state.fit ? "На ваш остаток" : "Афиша";
     $("#listCount").textContent = list.length + " " + plural(list.length, "событие", "события", "событий");
     $("#eventList").innerHTML = list.length
-      ? list.map(evCard).join("") + '<p class="source-note">Даты — открытые афиши Петербурга (Культура.РФ, Яндекс Афиша, сайты площадок). Цены ориентировочные, скидки ВТБ — предложение для пилота.</p>'
+      ? (elsewhere ? '<div class="search-note">В выбранном фильтре ничего нет — нашли во всей афише</div>' : "") + list.map(evCard).join("") + '<p class="source-note">Даты — открытые афиши Петербурга (Культура.РФ, Яндекс Афиша, сайты площадок). Цены ориентировочные, скидки ВТБ — предложение для пилота.</p>'
       : state.q.trim()
         ? '<div class="empty">По запросу «' + esc(state.q.trim()) + '» ничего не нашли.<br>Поиск учитывает опечатки и раскладку — попробуйте другое слово' + (state.cat !== "all" || state.fit ? ' или сбросьте фильтры' : '') + '.</div>'
         : '<div class="empty">Нет событий под этот фильтр.<br>Попробуйте другую категорию.</div>';
