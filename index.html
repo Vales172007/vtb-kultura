@@ -1,0 +1,1287 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ВТБ Культура</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ВТБ Культура">
+  <meta name="description" content="ВТБ Культура: афиша со скидками для клиентов ВТБ, остаток Пушкинской карты и закрытые события VTB ART Pass.">
+  <meta name="theme-color" content="#0d2fb4">
+  <meta property="og:title" content="ВТБ Культура — концепт">
+  <meta property="og:description" content="Афиша Петербурга со скидками, остаток Пушкинской карты и закрытые события VTB ART Pass. Концепт для кейс-чемпионата «Молодежный Банк ВТБ», не официальный продукт банка.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230a23a0'/%3E%3Cstop offset='.6' stop-color='%231f5cff'/%3E%3Cstop offset='1' stop-color='%2320b6ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='48' height='48' rx='14' fill='url(%23g)'/%3E%3Cpath transform='translate(8.5 12) scale(.66)' fill='%23fff' d='M41.6 6.8H7.4L9.88 0h34.22zm-1.25 3.4H6.16L3.7 17h34.22zm-3.7 10.21H2.47L0 27.21h34.22z'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+/* ==========================================================================
+   ВТБ Культура — MVP
+   Визуальный язык ВТБ Онлайн: «сияющий» синий фон, стеклянные плитки,
+   белые секции с крупным скруглением, тёмно-синий плавающий таб-бар
+   ========================================================================== */
+
+:root {
+  --blue: #1a5cff;          /* кнопки и акценты */
+  --blue-ink: #0d2fb4;      /* фирменный синий */
+  --navy: #1d2a80;          /* таб-бар */
+  --navy-900: #0a1a6e;
+  --cyan: #20b6ff;
+  --violet: #7b5cff;
+  --pink: #e86bf0;
+  --bg: #eef0f4;            /* фон под секциями */
+  --tile: #f3f4f7;          /* серые плитки внутри секций */
+  --card: #ffffff;
+  --line: #e4e6ec;
+  --ink: #1b1d24;
+  --muted: #8b90a0;
+  --green: #14a35a;
+  --r-block: 34px;
+  --r-tile: 26px;
+  --r-glass: 22px;
+  --aurora:
+    radial-gradient(120% 70% at 85% 8%, rgba(32, 182, 255, .85) 0%, rgba(32, 182, 255, 0) 55%),
+    radial-gradient(90% 60% at 10% 30%, rgba(10, 26, 140, .95) 0%, rgba(10, 26, 140, 0) 70%),
+    radial-gradient(80% 50% at 70% 60%, rgba(123, 92, 255, .55) 0%, rgba(123, 92, 255, 0) 70%),
+    radial-gradient(60% 40% at 20% 85%, rgba(32, 182, 255, .45) 0%, rgba(32, 182, 255, 0) 70%),
+    linear-gradient(170deg, #0d2fb4 0%, #1a4ff0 55%, #2b6dff 100%);
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+body {
+  font-family: "Onest", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; text-align: inherit; }
+h1, h2, h3 { margin: 0; }
+.muted { color: var(--muted); font-size: 14px; }
+svg { display: block; }
+
+/* ---------- Логотип и иконка ---------- */
+.logo-lockup { display: inline-flex; }
+.logo-lockup svg { height: 35px; width: auto; }
+.logo-lockup--sm svg { height: 26px; }
+.app-icon { display: inline-block; width: 40px; height: 40px; flex: none; }
+.app-icon svg { width: 100%; height: 100%; }
+.app-icon--xl { width: 84px; height: 84px; filter: drop-shadow(0 12px 24px rgba(13, 47, 180, .35)); }
+
+/* ---------- Сцена: презентация + телефон ---------- */
+.stage {
+  min-height: 100vh; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 64px;
+  align-items: center; max-width: 1240px; margin: 0 auto; padding: 40px 32px;
+}
+.pitch__title { font-size: 42px; line-height: 1.1; font-weight: 700; letter-spacing: -.02em; margin: 28px 0 26px; }
+.pitch__title span { color: var(--blue); }
+.pitch__list { list-style: none; margin: 0; padding: 6px 0; background: var(--card); border-radius: var(--r-tile); }
+.pitch__list li { display: flex; gap: 18px; padding: 14px 24px; font-size: 16px; line-height: 1.4; }
+.pitch__list li + li { border-top: 1px solid var(--line); }
+.pitch__list b { color: var(--blue); font-weight: 700; font-size: 18px; }
+.pitch__note { margin-top: 14px; color: #fff; border-radius: var(--r-tile); padding: 20px 24px; line-height: 1.45; background: var(--aurora); }
+.pitch__note b { display: inline-block; background: #fff; color: var(--blue-ink); border-radius: 10px; padding: 2px 10px; margin-right: 8px; font-size: 13px; }
+.pitch__logos { display: flex; gap: 14px; margin-top: 14px; }
+.pitch__logos > div { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; background: var(--card); border-radius: var(--r-tile); padding: 20px 12px 14px; }
+.pitch__logos > div:last-child { background: var(--aurora); }
+.pitch__logos > div:last-child small { color: rgba(255,255,255,.8); }
+.pitch__logos small { color: var(--muted); font-size: 12px; }
+.pitch__logos .app-icon--xl { width: 64px; height: 64px; }
+.pitch__foot { color: var(--muted); font-size: 13px; margin-top: 16px; }
+
+.phone {
+  position: relative; width: 400px; height: 840px; border-radius: 58px; padding: 11px;
+  background: #0d0f1a; box-shadow: 0 0 0 2px #2a2d3a, 0 40px 90px rgba(13, 30, 110, .3);
+}
+.phone::before { content: ""; position: absolute; top: 22px; left: 50%; transform: translateX(-50%); width: 112px; height: 32px; background: #000; border-radius: 20px; z-index: 80; }
+
+/* ---------- Приложение ---------- */
+.app { position: relative; height: 100%; overflow: hidden; border-radius: 47px; background: var(--bg); isolation: isolate; }
+.statusbar {
+  position: absolute; top: 0; left: 0; right: 0; height: 54px; z-index: 70; pointer-events: none;
+  display: flex; justify-content: space-between; align-items: center; padding: 6px 30px 0 40px; font-weight: 600; font-size: 16px; color: #fff;
+  transition: color .2s;
+}
+.app.is-light-top .statusbar { color: var(--ink); }
+.statusbar__icons { display: flex; gap: 5px; align-items: center; }
+.statusbar__icons i { width: 4px; height: 10px; background: currentColor; border-radius: 1px; opacity: .9; }
+.statusbar__icons i:nth-child(2) { height: 12px; }
+.statusbar__icons i:nth-child(3) { height: 14px; }
+.statusbar__icons b { width: 26px; height: 12px; border: 1.5px solid currentColor; border-radius: 4px; margin-left: 4px; position: relative; opacity: .9; }
+.statusbar__icons b::after { content: ""; position: absolute; inset: 1.5px; right: 8px; background: #ffd23f; border-radius: 1.5px; }
+
+.screens { height: 100%; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; padding-bottom: 120px; }
+.screens::-webkit-scrollbar { display: none; }
+.screen { display: none; animation: fade .25s ease; }
+.screen.is-active { display: block; }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* Hero с «сиянием» */
+.hero { position: relative; color: #fff; background: var(--aurora); padding: 58px 18px 54px; }
+.hero--deep { background: radial-gradient(70% 45% at 50% 30%, rgba(232,107,240,.45), transparent 70%), var(--aurora); }
+.hero--center { text-align: center; }
+.hero--short { padding-bottom: 46px; }
+.head { display: flex; align-items: center; gap: 12px; }
+.avatar { position: relative; width: 46px; height: 46px; border-radius: 15px; background: rgba(255,255,255,.18); display: grid; place-items: center; }
+.avatar svg { width: 24px; height: 24px; fill: none; stroke: #fff; stroke-width: 1.8; }
+.avatar__spark { position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; border-radius: 50%; background: var(--navy); border: 2px solid rgba(255,255,255,.9); }
+.avatar__spark::after { content: ""; position: absolute; inset: 3px; background: #fff; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); }
+.head__name { font-size: 17px; font-weight: 500; }
+.head__icons { margin-left: auto; display: flex; gap: 18px; }
+.head__icons svg { width: 27px; height: 27px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.hero__brand { margin: 22px 0 6px; opacity: .95; }
+.concept { display: block; font-size: 11.5px; opacity: .7; margin-top: 6px; line-height: 1.3; }
+.search { display: flex; align-items: center; gap: 10px; background: var(--tile); border-radius: 16px; padding: 0 14px; margin-bottom: 12px; }
+.search svg { width: 20px; height: 20px; fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; flex: none; }
+.search input { flex: 1; min-width: 0; border: 0; background: none; font: inherit; font-size: 16px; color: var(--ink); padding: 13px 0; outline: none; }
+.search:focus-within { box-shadow: 0 0 0 2px var(--blue); }
+.hero__label { font-size: 18px; font-weight: 500; display: flex; justify-content: space-between; align-items: center; }
+.dots { font-size: 22px; line-height: 1; opacity: .9; font-weight: 700; color: inherit; }
+.hero__sum { display: flex; align-items: center; gap: 12px; font-size: 44px; font-weight: 600; letter-spacing: -.02em; margin: 2px 0 14px; }
+.eye svg { width: 30px; height: 30px; fill: none; stroke: #fff; stroke-width: 1.8; }
+.cardrow { display: flex; gap: 8px; margin-bottom: 14px; }
+.cardpill { display: inline-flex; align-items: center; gap: 10px; background: rgba(255,255,255,.16); border-radius: 18px; padding: 8px 14px 8px 8px; font-size: 16px; }
+.mini-card { width: 40px; height: 27px; border-radius: 6px; font-style: normal; font-size: 8px; font-weight: 700; display: flex; align-items: flex-end; justify-content: flex-end; padding: 3px 4px; color: #fff; background: linear-gradient(135deg, #1a5cff, #20b6ff); }
+.mini-card--pk { background: linear-gradient(135deg, #d9dbe3, #9da3b5); color: #1b1d24; }
+
+.glass-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; gap: 10px; }
+.glass {
+  display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 14px 16px; border-radius: var(--r-glass);
+  background: rgba(255,255,255,.14); backdrop-filter: blur(8px); font-size: 15px; font-weight: 500; line-height: 1.2; color: #fff;
+}
+.glass svg { width: 26px; height: 26px; fill: none; stroke: #fff; stroke-width: 1.8; flex: none; stroke-linecap: round; stroke-linejoin: round; }
+.glass--tall { grid-column: 2; grid-row: 1 / span 2; flex-direction: column; align-items: flex-start; justify-content: space-between; }
+.glass--tall b { font-size: 30px; font-weight: 600; letter-spacing: -.02em; }
+.glass--tall small { font-size: 13px; opacity: .8; display: block; margin-top: 2px; }
+#pickBtn { grid-column: 1; grid-row: 1; }
+#remindBtn { grid-column: 1; grid-row: 2; }
+
+.promo-card {
+  position: relative; display: block; width: 100%; margin-top: 12px; padding: 18px 18px 20px; border-radius: var(--r-tile); overflow: hidden; color: #fff; min-height: 148px;
+  background: radial-gradient(80% 90% at 90% 80%, rgba(32,182,255,.55), transparent 70%), linear-gradient(120deg, #c35cf2 0%, #8f66ff 55%, #5a7dff 100%);
+}
+.promo-card__title { display: block; font-size: 22px; font-weight: 500; position: relative; z-index: 1; }
+.promo-card__rows { display: grid; grid-template-columns: auto auto; justify-content: start; gap: 4px 14px; margin-top: 26px; font-size: 15px; position: relative; z-index: 1; }
+.promo-card__rows span { opacity: .75; }
+.promo-card__rows b { font-weight: 500; }
+.promo-card__art { position: absolute; right: -6px; bottom: -8px; width: 140px; height: 140px; }
+
+/* Белые секции */
+.block { position: relative; background: var(--card); border-radius: var(--r-block); padding: 26px 18px 22px; margin-top: 10px; }
+.block--overlap { margin-top: -30px; z-index: 1; }
+.block__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; gap: 10px; }
+.block__head h2 { font-size: 26px; font-weight: 600; letter-spacing: -.01em; }
+.block__head h2 small { font-size: 14px; vertical-align: middle; }
+.block__head .dots { color: var(--ink); }
+.block__sub { color: var(--muted); font-size: 17px; line-height: 1.35; margin: -8px 0 18px; }
+
+/* Истории «Интересное» */
+.stories { display: flex; gap: 12px; overflow-x: auto; margin: 0 -18px; padding: 0 18px; scrollbar-width: none; scroll-snap-type: x mandatory; }
+.stories::-webkit-scrollbar { display: none; }
+.story { flex: none; width: 168px; height: 212px; border-radius: var(--r-tile); position: relative; overflow: hidden; color: #fff; display: flex; align-items: flex-end; padding: 16px; font-size: 18px; font-weight: 500; line-height: 1.2; scroll-snap-align: start; }
+.story > span:last-child { position: relative; z-index: 1; }
+.story__art { position: absolute; inset: 0; }
+.story--1 { background: linear-gradient(180deg, #5ab8ff 0%, #1a5cff 100%); }
+.story--2 { background: linear-gradient(180deg, #1d2a80 0%, #070d3a 100%); }
+.story--3 { background: linear-gradient(180deg, #b48bff 0%, #5a5cff 100%); }
+.story--4 { background: linear-gradient(180deg, #34d0ff 0%, #1a7bff 100%); }
+
+/* Кино */
+.rail { display: flex; gap: 12px; overflow-x: auto; margin: 0 -18px; padding: 0 18px 2px; scrollbar-width: none; scroll-snap-type: x mandatory; }
+.rail::-webkit-scrollbar { display: none; }
+.film { flex: none; width: 140px; display: flex; flex-direction: column; gap: 4px; scroll-snap-align: start; }
+.film__poster { position: relative; display: block; width: 140px; height: 210px; border-radius: 20px; overflow: hidden; margin-bottom: 6px; box-shadow: 0 8px 20px rgba(10, 20, 80, .18); }
+.film__poster svg, .film__poster img, .ev__art img, .sheet__hero > img, .ticket__head > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.film__title { font-size: 15px; font-weight: 600; line-height: 1.2; }
+.film__meta { font-size: 13px; color: var(--muted); }
+.ev--poster .ev__art { min-height: 144px; }
+.sheet__hero.sheet__hero--poster { min-height: 236px; padding-right: 152px; }
+.sheet__hero--poster::after { display: none; }
+.sheet__poster { position: absolute !important; right: 18px; top: 32px; width: 120px; height: 180px; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 30px rgba(0, 0, 0, .35); }
+.sheet__poster svg, .sheet__poster img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.head__vtb { width: 64px; margin-left: 4px; opacity: .95; }
+.head__vtb svg { width: 100%; height: auto; }
+
+/* Баннер */
+.banner {
+  position: relative; display: block; width: calc(100% - 36px); margin: 10px 18px 0; min-height: 170px; border-radius: var(--r-tile); overflow: hidden;
+  color: #fff; padding: 22px; background: linear-gradient(120deg, #1d4bff 0%, #2d6bff 100%);
+}
+.banner__title { display: block; font-size: 21px; font-weight: 500; line-height: 1.25; position: relative; z-index: 1; }
+.btn-white { position: relative; z-index: 1; display: inline-block; margin-top: 26px; background: #fff; color: var(--ink); border-radius: 14px; padding: 11px 18px; font-size: 16px; font-weight: 500; }
+.banner__art { position: absolute; right: 0; bottom: -4px; width: 150px; height: 160px; }
+
+/* Фильтры */
+.chips { display: flex; gap: 8px; overflow-x: auto; margin: 0 -18px; padding: 0 18px; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex: none; padding: 10px 16px; border-radius: 14px; background: var(--tile); font-size: 15px; font-weight: 500; white-space: nowrap; }
+.chip.is-on { background: var(--blue); color: #fff; }
+.toggle { display: flex; align-items: center; gap: 12px; font-size: 15px; margin: 16px 0; cursor: pointer; user-select: none; }
+.toggle input { position: absolute; opacity: 0; pointer-events: none; }
+.toggle__track { width: 46px; height: 28px; border-radius: 14px; background: #d6d9e2; position: relative; transition: background .2s; flex: none; }
+.toggle__dot { position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: transform .2s; box-shadow: 0 2px 4px rgba(0,0,0,.15); }
+.toggle input:checked + .toggle__track { background: var(--blue); }
+.toggle input:checked + .toggle__track .toggle__dot { transform: translateX(18px); }
+.toggle input:focus-visible + .toggle__track { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+/* Карточки событий — серые плитки внутри белой секции */
+.list { display: grid; gap: 10px; }
+.ev { display: grid; grid-template-columns: 96px 1fr; gap: 14px; background: var(--tile); border-radius: var(--r-tile); padding: 10px; width: 100%; }
+.ev__art { position: relative; border-radius: 18px; min-height: 112px; overflow: hidden; }
+.ev__art svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ev__body { min-width: 0; display: flex; flex-direction: column; gap: 3px; padding: 4px 6px 4px 0; }
+.ev__cat { font-size: 12.5px; color: var(--muted); }
+.ev__title { font-size: 17px; font-weight: 600; line-height: 1.2; }
+.ev__place { font-size: 13.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ev__row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: auto; padding-top: 6px; }
+.price { font-weight: 600; font-size: 16px; }
+.price s { color: var(--muted); font-weight: 400; font-size: 13px; margin-left: 4px; }
+.tag { font-size: 12px; font-weight: 500; padding: 4px 8px; border-radius: 9px; background: #fff; color: var(--ink); }
+.tag--vtb { background: var(--blue); color: #fff; }
+.tag--ok { background: #e2f6eb; color: var(--green); }
+.tag--pk { background: #fff; color: #6a4bff; }
+.empty { text-align: center; color: var(--muted); padding: 32px 12px; background: var(--tile); border-radius: var(--r-tile); line-height: 1.5; }
+.source-note { font-size: 12px; color: var(--muted); margin: 14px 4px 0; line-height: 1.45; }
+
+/* Навбар внутренних экранов */
+.navbar { display: grid; grid-template-columns: 40px 1fr 40px; align-items: center; font-size: 19px; font-weight: 500; margin-bottom: 18px; }
+.back svg { width: 30px; height: 30px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.hero__big { font-size: 44px; font-weight: 600; letter-spacing: -.02em; margin-top: 18px; }
+.hero__sub { font-size: 18px; margin-top: 6px; opacity: .95; }
+.hero__art { width: 150px; height: 120px; margin: 0 auto -6px; }
+
+/* Уровень (как «Ваш уровень Золото») */
+.level-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 28px; text-align: left; }
+.level-row > div { display: flex; align-items: center; gap: 12px; border-radius: var(--r-glass); padding: 10px 12px; background: rgba(255,255,255,.14); }
+.level-row small { display: block; font-size: 13px; opacity: .75; }
+.level-row b { font-size: 18px; font-weight: 600; }
+.orb { width: 44px; height: 44px; border-radius: 50%; flex: none; box-shadow: inset -4px -6px 10px rgba(0,0,0,.25), inset 4px 5px 8px rgba(255,255,255,.6); }
+.orb--sm { width: 30px; height: 30px; }
+.orb--1 { background: radial-gradient(circle at 35% 30%, #fff 0%, #bfe6ff 25%, #5aa8e8 60%, #2c5fb0 100%); }
+.orb--2 { background: radial-gradient(circle at 35% 30%, #fff6dc 0%, #f5c46c 28%, #c9822d 62%, #7a4413 100%); }
+.orb--3 { background: radial-gradient(circle at 35% 30%, #fff 0%, #e6dcff 25%, #9b86e8 60%, #4c3aa8 100%); }
+
+/* ART Pass шаги */
+.glass-row { display: grid; gap: 8px; margin-top: 22px; text-align: left; }
+.glass-row > div { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px; background: rgba(255,255,255,.14); font-size: 15px; }
+.step__n { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-weight: 600; font-size: 13px; background: rgba(255,255,255,.22); flex: none; }
+.is-done .step__n { background: #fff; color: var(--blue-ink); }
+
+.ap { background: var(--tile); border-radius: var(--r-tile); padding: 16px; }
+.ap__top { display: flex; gap: 14px; }
+.ap__icon { width: 64px; height: 64px; border-radius: 18px; flex: none; overflow: hidden; }
+.ap__title { font-weight: 600; font-size: 17px; }
+.ap__meta { font-size: 13.5px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
+.ap__desc { font-size: 14.5px; line-height: 1.45; margin: 12px 0 14px; }
+.ap__foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+
+/* Кнопки */
+.btn { display: inline-flex; align-items: center; justify-content: center; border-radius: 14px; padding: 12px 18px; font-weight: 500; font-size: 16px; transition: transform .1s; }
+.btn:active { transform: scale(.97); }
+.btn--primary { background: var(--blue); color: #fff; }
+.btn--block { width: 100%; padding: 16px; font-size: 17px; }
+.btn--primary:disabled { background: #b8c6f2; cursor: not-allowed; }
+.btn--soft { background: #e6edff; color: var(--blue); }
+
+/* Билеты */
+.ticket { background: var(--tile); border-radius: var(--r-tile); overflow: hidden; }
+.ticket__head { position: relative; color: #fff; padding: 16px 18px; overflow: hidden; }
+.ticket__head svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ticket__head > div { position: relative; z-index: 1; }
+.ticket__head b { display: block; font-size: 18px; font-weight: 600; }
+.ticket__head span { font-size: 14px; opacity: .85; }
+.ticket__body { display: flex; gap: 16px; padding: 16px 18px; align-items: center; }
+.ticket__qr { width: 92px; height: 92px; flex: none; background: #fff; border-radius: 12px; padding: 6px; }
+.ticket__info { font-size: 14px; line-height: 1.6; color: var(--muted); }
+.ticket__info b { color: var(--ink); font-weight: 600; }
+
+/* Выгода */
+.tiles2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tile { background: var(--tile); border-radius: var(--r-tile); padding: 18px; min-height: 130px; display: flex; flex-direction: column; justify-content: space-between; }
+.tile__t { font-size: 17px; font-weight: 500; display: flex; justify-content: space-between; line-height: 1.2; }
+.tile__v { font-size: 30px; font-weight: 600; letter-spacing: -.02em; }
+.tile-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--tile); border-radius: var(--r-tile); padding: 18px; margin-top: 10px; font-size: 16px; font-weight: 500; line-height: 1.3; }
+.tile-row .btn { flex: none; }
+.track-card { background: var(--tile); border-radius: var(--r-tile); padding: 18px; margin-top: 10px; }
+.track-card__t { font-size: 16px; font-weight: 500; }
+.track-scale { display: flex; justify-content: space-between; font-size: 15px; font-weight: 500; margin: 18px 0 8px; }
+.track { position: relative; height: 12px; border-radius: 6px; background: linear-gradient(90deg, #bfe3ff, #dcd6ff); margin: 0 15px; }
+.track__fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; background: linear-gradient(90deg, #4bb6ff, #6a7dff 60%, #8b5cff); }
+.track .orb { position: absolute; top: 50%; transform: translate(-50%, -50%); border: 3px solid #fff; }
+.track-foot { text-align: right; font-size: 15px; font-weight: 500; margin-top: 18px; }
+.journey { display: grid; gap: 8px; }
+.journey div { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.4; padding: 14px; border-radius: 20px; background: var(--tile); }
+.journey div.is-now { background: var(--blue); color: #fff; }
+.journey em { font-style: normal; font-weight: 600; min-width: 58px; }
+.setting { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; font-size: 16px; border-top: 1px solid var(--line); }
+.setting:first-child { border-top: 0; padding-top: 0; }
+.setting.toggle { margin: 0; }
+.link-btn { color: var(--blue); font-weight: 500; font-size: 16px; }
+
+/* Таб-бар — плавающая тёмная плашка */
+.tabbar {
+  position: absolute; left: 12px; right: 12px; bottom: 18px; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr);
+  background: rgba(29, 42, 128, .97); border-radius: 30px; padding: 10px 6px 12px; box-shadow: 0 10px 30px rgba(10, 20, 80, .35);
+}
+.tabbar button { position: relative; display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,.55); }
+.tabbar svg { width: 27px; height: 27px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.tabbar button.is-active { color: #fff; }
+.badge { position: absolute; top: -6px; left: calc(50% + 6px); min-width: 20px; height: 20px; border-radius: 10px; background: #ff3b47; color: #fff; font-size: 12px; font-style: normal; font-weight: 600; display: grid; place-items: center; padding: 0 5px; border: 2px solid var(--navy); }
+
+/* Пуш */
+.push {
+  position: absolute; top: 56px; left: 10px; right: 10px; z-index: 75; display: flex; gap: 12px; align-items: center;
+  background: rgba(245, 246, 250, .92); backdrop-filter: blur(16px); border-radius: 22px; padding: 12px 14px; box-shadow: 0 14px 40px rgba(10, 20, 80, .25);
+  animation: drop .45s cubic-bezier(.2, .9, .3, 1.2); cursor: pointer;
+}
+@keyframes drop { from { transform: translateY(-160%); } to { transform: none; } }
+.push .app-icon { width: 40px; height: 40px; }
+.push__meta { font-size: 12px; color: var(--muted); }
+.push__text { font-size: 14.5px; font-weight: 500; line-height: 1.3; }
+
+/* Нижний лист */
+.sheet { position: absolute; inset: 0; z-index: 60; }
+.sheet__backdrop { position: absolute; inset: 0; background: rgba(8, 14, 50, .5); animation: fadeIn .2s; }
+@keyframes fadeIn { from { opacity: 0; } }
+.sheet__panel { position: absolute; left: 0; right: 0; bottom: 0; max-height: 92%; overflow-y: auto; background: var(--card); border-radius: 34px 34px 0 0; animation: up .32s cubic-bezier(.2, .9, .3, 1); scrollbar-width: none; }
+@keyframes up { from { transform: translateY(100%); } }
+.sheet__hero { position: relative; color: #fff; padding: 26px 20px 20px; min-height: 200px; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; border-radius: 34px 34px 0 0; }
+.sheet__hero > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sheet__hero::after, .ticket__head::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(8, 20, 90, .7) 0%, rgba(8, 20, 90, .15) 60%, transparent 100%); }
+.ticket__head::after { background: linear-gradient(90deg, rgba(8, 20, 90, .6), rgba(8, 20, 90, .1)); }
+.sheet__hero > *:not(svg) { position: relative; z-index: 1; }
+.sheet__close { position: absolute !important; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,.25); color: #fff; font-size: 22px; line-height: 1; display: grid; place-items: center; }
+.sheet__grab { position: absolute !important; top: 8px; left: 50%; transform: translateX(-50%); width: 40px; height: 5px; border-radius: 3px; background: rgba(255,255,255,.6); }
+.sheet__hero h3 { font-size: 28px; font-weight: 600; letter-spacing: -.01em; }
+.sheet__hero .ev__cat { color: rgba(255,255,255,.85); font-size: 14px; }
+.sheet__hero p { margin: 4px 0 0; font-size: 15px; opacity: .9; }
+.sheet__content { padding: 18px; display: grid; gap: 12px; }
+.sheet__desc { font-size: 16px; line-height: 1.5; margin: 0; }
+.opt-title { font-size: 20px; font-weight: 600; margin: 8px 0 0; }
+.dates { display: flex; gap: 8px; flex-wrap: wrap; }
+.date-btn { background: var(--tile); border-radius: 16px; padding: 11px 14px; font-size: 15px; font-weight: 500; border: 2px solid transparent; }
+.date-btn.is-on { border-color: var(--blue); background: #eaf0ff; }
+.pay { display: flex; align-items: center; gap: 14px; background: var(--tile); border-radius: 20px; padding: 14px; border: 2px solid transparent; width: 100%; }
+.pay.is-on { border-color: var(--blue); background: #eaf0ff; }
+.pay:disabled { opacity: .5; cursor: not-allowed; }
+.pay .mini-card { width: 48px; height: 32px; }
+.pay__txt { flex: 1; font-size: 16px; font-weight: 500; }
+.pay__txt small { display: block; font-weight: 400; color: var(--muted); font-size: 13.5px; margin-top: 2px; }
+.qty { display: flex; align-items: center; justify-content: space-between; background: var(--tile); border-radius: 20px; padding: 10px 14px; font-size: 16px; font-weight: 500; }
+.qty__ctrl { display: flex; align-items: center; gap: 16px; }
+.qty__ctrl button { width: 36px; height: 36px; border-radius: 12px; background: #fff; color: var(--blue); font-size: 20px; font-weight: 500; display: grid; place-items: center; }
+.summary { background: var(--tile); border-radius: 20px; padding: 14px 16px; font-size: 15px; display: grid; gap: 8px; }
+.summary div { display: flex; justify-content: space-between; }
+.summary .hl { color: var(--green); font-weight: 500; }
+.summary .total { font-size: 18px; font-weight: 600; padding-top: 8px; border-top: 1px solid var(--line); }
+.sheet__cta { position: sticky; bottom: 0; padding: 12px 18px 26px; background: linear-gradient(to top, #fff 75%, rgba(255,255,255,0)); }
+.success { text-align: center; padding: 34px 20px 30px; display: grid; gap: 10px; }
+.success__icon { width: 96px; height: 96px; margin: 0 auto 6px; }
+.success h3 { font-size: 26px; font-weight: 600; }
+.success p { color: var(--muted); font-size: 15.5px; line-height: 1.5; margin: 0 0 10px; }
+.success p b { color: var(--ink); font-weight: 600; }
+
+/* Заставка */
+.splash { position: absolute; inset: 0; z-index: 90; background: var(--aurora); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; animation: splashOut .5s ease 1.1s forwards; pointer-events: none; }
+.splash .app-icon--xl { animation: pop .6s cubic-bezier(.2, .9, .3, 1.3); }
+.splash .logo-lockup svg { height: 30px; }
+@keyframes pop { from { transform: scale(.6); opacity: 0; } }
+@keyframes splashOut { to { opacity: 0; visibility: hidden; } }
+
+/* Тост */
+.toast { position: absolute; left: 16px; right: 16px; bottom: 112px; background: #14193d; color: #fff; border-radius: 18px; padding: 14px 16px; font-size: 15px; z-index: 65; text-align: center; animation: fadeIn .2s; }
+
+/* ---------- Адаптив ---------- */
+@media (max-width: 1000px) {
+  .stage { grid-template-columns: 1fr; justify-items: center; gap: 28px; padding: 24px 16px; }
+  .pitch { max-width: 560px; order: 2; }
+  .pitch__title { font-size: 30px; }
+}
+@media (max-width: 520px) {
+  .stage { display: block; padding: 0; }
+  .pitch { display: none; }
+  .phone { width: 100%; height: 100vh; height: 100dvh; padding: 0; border-radius: 0; box-shadow: none; background: var(--bg); }
+  .phone::before, .statusbar { display: none; }
+  .app { border-radius: 0; }
+  .hero { padding-top: calc(16px + env(safe-area-inset-top)); }
+  .push { top: calc(10px + env(safe-area-inset-top)); }
+  .tabbar { bottom: calc(10px + env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0s !important; animation-delay: 0s !important; transition: none !important; }
+}
+
+/* Только приложение: на весь экран телефона, на компьютере — колонка по центру */
+html, body { height: 100%; }
+body { background: #0d2fb4; overflow: hidden; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: #0d2fb4; }
+.stage { display: block; height: 100%; min-height: 0; max-width: none; padding: 0; }
+.phone { width: 100%; max-width: 480px; height: 100%; margin: 0 auto; padding: 0; border-radius: 0; box-shadow: none; background: var(--bg); }
+.phone::before, .statusbar { display: none; }
+.app { border-radius: 0; }
+.hero { padding-top: calc(16px + env(safe-area-inset-top, 0px)); }
+.push { top: calc(10px + env(safe-area-inset-top, 0px)); }
+.tabbar { bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
+@media (min-width: 481px) { body { background: var(--bg); } .phone { box-shadow: 0 0 0 1px var(--line); } }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <!-- Левая колонка на десктопе: подача как в презентации -->
+    <!-- Телефон -->
+    <div class="phone">
+      <div class="app" id="app">
+        <div class="statusbar" aria-hidden="true"><span id="clock">9:41</span><span class="statusbar__icons"><i></i><i></i><i></i><b></b></span></div>
+
+        <main class="screens" id="screens">
+          <!-- Афиша (главная) -->
+          <section class="screen is-active" data-screen="afisha">
+            <div class="hero">
+              <header class="head">
+                <button class="avatar" data-go="profile" aria-label="Профиль"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><i class="avatar__spark" aria-hidden="true"></i></button>
+                <span class="head__name" id="userName"></span>
+                <span class="head__icons">
+                  <button aria-label="ART Pass" data-go="artpass"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="5" rx="1"/><path d="M5 13v7h14v-7M12 8v12M12 8c-1.5-3-5-4-5-1.5S10 8 12 8zm0 0c1.5-3 5-4 5-1.5S14 8 12 8z"/></svg></button>
+                  <button aria-label="Поиск" id="searchBtn"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+                </span>
+              </header>
+
+              <div class="hero__brand"><span class="logo-lockup logo-lockup--sm" data-logo="light"></span><span class="concept">Концепт для кейс-чемпионата «Молодежный Банк ВТБ», не официальный продукт банка</span></div>
+              <div class="hero__label">Пушкинская карта <button class="dots" aria-hidden="true" tabindex="-1">⋮</button></div>
+              <div class="hero__sum"><span id="balanceSum"></span><button class="eye" id="eyeBtn" aria-label="Скрыть остаток"><svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+              <div class="cardrow">
+                <span class="cardpill"><i class="mini-card mini-card--pk">МИР</i>Пушкинская</span>
+                <span class="cardpill"><i class="mini-card">ВТБ</i>4821</span>
+              </div>
+
+              <div class="glass-grid">
+                <button class="glass" id="pickBtn"><svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/></svg>Подобрать на остаток</button>
+                <button class="glass" id="remindBtn"></button>
+                <div class="glass glass--tall" id="burnTile"></div>
+              </div>
+
+              <button class="promo-card" data-go="artpass">
+                <span class="promo-card__title">VTB ART Pass</span>
+                <span class="promo-card__rows"><span>Розыгрыш</span><b>закрытых событий</b><span>Условие</span><b>1 билет через афишу</b></span>
+                <span class="promo-card__art" aria-hidden="true" data-art="pass"></span>
+              </button>
+            </div>
+
+            <section class="block block--overlap">
+              <div class="block__head"><h2>Интересное <small>▴</small></h2><span class="dots">⋮</span></div>
+              <div class="stories" id="stories"></div>
+            </section>
+
+            <section class="block">
+              <div class="block__head"><h2>Кино по Пушкинской</h2><button class="link-btn" data-story="cinema">Все</button></div>
+              <p class="block__sub" id="cinemaSub"></p>
+              <div class="rail" id="cinemaRail"></div>
+            </section>
+
+            <button class="banner" id="discountBanner">
+              <span class="banner__title">Скидки клиентам ВТБ<br>до 20% на афишу</span>
+              <span class="btn-white">Перейти</span>
+              <span class="banner__art" aria-hidden="true" data-art="gift"></span>
+            </button>
+
+            <section class="block" id="afishaBlock">
+              <div class="block__head"><h2 id="listTitle">Афиша</h2><span class="muted" id="listCount"></span></div>
+              <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="searchInput" placeholder="Спектакль, площадка" autocomplete="off"></label>
+              <div class="chips" id="chips" role="tablist"></div>
+              <label class="toggle">
+                <input type="checkbox" id="fitToggle">
+                <span class="toggle__track"><span class="toggle__dot"></span></span>
+                Только в пределах остатка карты
+              </label>
+              <div class="list" id="eventList"></div>
+            </section>
+          </section>
+
+          <!-- ART Pass -->
+          <section class="screen" data-screen="artpass">
+            <div class="hero hero--center hero--deep">
+              <div class="navbar"><button class="back" data-go="afisha" aria-label="Назад"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button><span>ART Pass</span><i></i></div>
+              <div class="hero__art" data-art="pass-big" aria-hidden="true"></div>
+              <div class="hero__big">VTB ART Pass</div>
+              <div class="hero__sub">Закрытые события для клиентов ВТБ</div>
+              <div class="glass-row" id="apSteps"></div>
+            </div>
+            <section class="block block--overlap">
+              <div class="block__head"><h2>Закрытые события</h2></div>
+              <div class="list" id="apList"></div>
+            </section>
+          </section>
+
+          <!-- Билеты -->
+          <section class="screen" data-screen="tickets">
+            <div class="hero hero--center hero--short">
+              <div class="navbar"><button class="back" data-go="afisha" aria-label="Назад"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button><span>Мои билеты</span><i></i></div>
+            </div>
+            <section class="block block--overlap">
+              <div class="list" id="ticketList"></div>
+            </section>
+          </section>
+
+          <!-- Выгода -->
+          <section class="screen" data-screen="profile">
+            <div class="hero hero--center">
+              <div class="navbar"><button class="back" data-go="afisha" aria-label="Назад"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button><span>Выгода</span><i></i></div>
+              <div class="hero__big" id="benefitSum"></div>
+              <div class="hero__sub">Выгода от ВТБ Культуры в этом месяце ›</div>
+              <div class="level-row" id="levelRow"></div>
+            </div>
+            <div id="profileBody"></div>
+          </section>
+        </main>
+
+        <nav class="tabbar" id="tabbar">
+          <button data-go="afisha" class="is-active"><svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M14 5v12" stroke-dasharray="2 2"/></svg>Афиша</button>
+          <button data-go="artpass"><svg viewBox="0 0 24 24"><path d="M12 3c.8 4.6 2.4 6.2 7 7-4.6.8-6.2 2.4-7 7-.8-4.6-2.4-6.2-7-7 4.6-.8 6.2-2.4 7-7z"/></svg>ART Pass</button>
+          <button data-go="tickets"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg>Билеты<i class="badge" id="ticketBadge" hidden></i></button>
+          <button data-go="profile"><svg viewBox="0 0 24 24"><path d="M12 3c.8 4.6 2.4 6.2 7 7-4.6.8-6.2 2.4-7 7-.8-4.6-2.4-6.2-7-7 4.6-.8 6.2-2.4 7-7z" transform="translate(0 2)"/></svg>Выгода</button>
+        </nav>
+
+        <!-- Пуш-уведомление -->
+        <div class="push" id="push" hidden>
+          <span class="app-icon" data-icon></span>
+          <div><div class="push__meta">ВТБ Онлайн · сейчас</div><div class="push__text" id="pushText"></div></div>
+        </div>
+
+        <!-- Нижний лист -->
+        <div class="sheet" id="sheet" hidden>
+          <div class="sheet__backdrop" data-close></div>
+          <div class="sheet__panel" role="dialog" aria-modal="true" id="sheetPanel"></div>
+        </div>
+
+        <!-- Заставка -->
+        <div class="splash" id="splash" aria-hidden="true"><span class="app-icon app-icon--xl" data-icon></span><span class="logo-lockup" data-logo="light"></span></div>
+
+        <div class="toast" id="toast" hidden></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+/* ==========================================================================
+   ВТБ Культура — данные MVP
+   События: реальные афиши Санкт-Петербурга (ноябрь–декабрь 2026), собраны
+   30.10.2026 из открытых афиш (Культура.РФ, Яндекс Афиша, kuda-spb.ru,
+   peterburg2.ru, сайт Филармонии). Цены — ориентировочные, для демо.
+   Скидки ВТБ, ART Pass и баланс карты — концепция команды для пилота.
+   ========================================================================== */
+
+window.VTB_DATA = {
+  today: "2026-10-30",
+
+  user: {
+    name: "Александр",
+    age: 20,
+    city: "Санкт-Петербург",
+    pushkin: { limit: 5000, cinemaLimit: 2000, spent: 2600, cinemaSpent: 800, expires: "2026-12-31" },
+    vtbCard: "•• 4821",
+    cashbackMonthCap: 1000,
+    cashbackEarned: 180
+  },
+
+  categories: [
+    { id: "all", label: "Все" },
+    { id: "cinema", label: "Кино" },
+    { id: "theatre", label: "Театр" },
+    { id: "ballet", label: "Балет и опера" },
+    { id: "concert", label: "Концерты" },
+    { id: "exhibition", label: "Выставки" }
+  ],
+
+  events: [
+    /* Кино по Пушкинской карте: российские фильмы из подборок кинотеатров (Бюро культуры, «Мягкий кинотеатр Фокус»).
+       Кинотеатры реальные, сеансы и цены — примерные для демо. Постеры — типографские, без кадров из фильмов. */
+    {
+      id: "holop-3", cat: "cinema", title: "Холоп 3",
+      venue: "Кинотеатр «Аврора»", address: "Невский пр., 60",
+      dates: ["2026-11-01T19:30", "2026-11-03T21:00", "2026-11-07T18:15"], price: 450, age: "12+", pushkin: true, vtbDiscount: 10,
+      genre: "Комедия", poster: { lines: ["ХОЛОП", "3"], c: ["#ffcf6b", "#d0461f", "#3a0b12"] },
+      desc: "Третья часть одной из самых кассовых российских комедийных франшиз.",
+      source: "msk.burocultura.ru"
+    },
+    {
+      id: "derevnya-2", cat: "cinema", title: "На деревню дедушке 2",
+      venue: "Кинотеатр «Родина»", address: "Караванная ул., 12",
+      dates: ["2026-11-02T17:00", "2026-11-08T14:30", "2026-11-09T19:00"], price: 400, age: "6+", pushkin: true, vtbDiscount: 15,
+      genre: "Семейная комедия", poster: { lines: ["НА", "ДЕРЕВНЮ", "ДЕДУШКЕ 2"], c: ["#b8f07a", "#2f9d5a", "#0d3326"] },
+      desc: "Продолжение семейной комедии «На деревню дедушке».",
+      source: "fokus.comfortkino.ru"
+    },
+    {
+      id: "dikiy-drug", cat: "cinema", title: "Мой дикий друг. Возвращение домой",
+      venue: "Кинотеатр «Аврора»", address: "Невский пр., 60",
+      dates: ["2026-11-01T12:00", "2026-11-07T11:30", "2026-11-08T13:00"], price: 380, age: "6+", pushkin: true, vtbDiscount: 10,
+      genre: "Семейный", poster: { lines: ["МОЙ", "ДИКИЙ", "ДРУГ"], sub: "Возвращение домой", c: ["#7fd6ff", "#2a5cff", "#0b1a5e"] },
+      desc: "Продолжение семейного фильма «Мой дикий друг».",
+      source: "fokus.comfortkino.ru"
+    },
+    {
+      id: "zhenitba", cat: "theatre", title: "Женитьба",
+      venue: "Александринский театр", address: "пл. Островского, 6",
+      dates: ["2026-11-01T19:00"], price: 1200, age: "12+", pushkin: true, vtbDiscount: 10,
+      desc: "Гоголевская комедия о нерешительном женихе Подколесине на исторической сцене главного драматического театра страны.",
+      source: "peterburg2.ru"
+    },
+    {
+      id: "na-pokoe", cat: "theatre", title: "На покое",
+      venue: "Александринский театр", address: "пл. Островского, 6",
+      dates: ["2026-11-01T19:00"], price: 900, age: "16+", pushkin: true, vtbDiscount: 0,
+      desc: "Премьерный спектакль Александринки о том, как люди сцены уходят со сцены.",
+      source: "peterburg2.ru"
+    },
+    {
+      id: "abdullin", cat: "concert", title: "Органные вечера. Рубин Абдуллин",
+      venue: "Филармония, Большой зал", address: "Михайловская ул., 2",
+      dates: ["2026-11-02T19:00"], price: 800, age: "6+", pushkin: true, vtbDiscount: 15,
+      desc: "Цикл органных концертов одного из ведущих органистов России в Большом зале Филармонии им. Д. Д. Шостаковича.",
+      source: "philharmonia.spb.ru"
+    },
+    {
+      id: "beloselsky", cat: "concert", title: "Вечер камерной музыки",
+      venue: "Дворец Белосельских-Белозерских", address: "Невский пр., 41",
+      dates: ["2026-11-01T19:00", "2026-11-08T19:00"], price: 700, age: "6+", pushkin: true, vtbDiscount: 10,
+      desc: "Классическая программа в парадных залах дворца на углу Невского и Фонтанки.",
+      source: "afisha.yandex.ru"
+    },
+    {
+      id: "capella", cat: "concert", title: "Концерт в Капелле",
+      venue: "Академическая капелла", address: "наб. реки Мойки, 20",
+      dates: ["2026-11-12T19:00"], price: 900, age: "6+", pushkin: true, vtbDiscount: 10,
+      desc: "Хоровая и симфоническая музыка в одном из старейших концертных залов Петербурга.",
+      source: "afisha.yandex.ru"
+    },
+    {
+      id: "revizor", cat: "theatre", title: "Ревизор с продолжением",
+      venue: "Александринский театр", address: "пл. Островского, 6",
+      dates: ["2026-11-21T18:00", "2026-11-22T18:00"], price: 1500, age: "16+", pushkin: true, vtbDiscount: 10,
+      desc: "Валерий Фокин продолжает гоголевский сюжет: что происходит в городе N после финальной немой сцены.",
+      source: "peterburg2.ru"
+    },
+    {
+      id: "hamlet", cat: "theatre", title: "ШекспирГамлет",
+      venue: "Александринский театр", address: "пл. Островского, 6",
+      dates: ["2026-11-24T19:00"], price: 1400, age: "16+", pushkin: true, vtbDiscount: 0,
+      desc: "Современное прочтение «Гамлета» на сцене Александринского театра.",
+      source: "peterburg2.ru"
+    },
+    {
+      id: "ekaterina", cat: "theatre", title: "Екатерина и Вольтер",
+      venue: "Александринский театр", address: "пл. Островского, 6",
+      dates: ["2026-11-28T19:00"], price: 1300, age: "12+", pushkin: true, vtbDiscount: 10,
+      desc: "Спектакль-диалог о переписке императрицы и философа: власть, просвещение и ирония.",
+      source: "peterburg2.ru"
+    },
+    {
+      id: "prestuplenie", cat: "theatre", title: "Преступление и наказание",
+      venue: "Александринский театр", address: "пл. Островского, 6",
+      dates: ["2026-11-29T17:00"], price: 1600, age: "16+", pushkin: true, vtbDiscount: 15,
+      desc: "Достоевский в городе Достоевского: Раскольников, Соня и Порфирий на большой сцене.",
+      source: "peterburg2.ru"
+    },
+    {
+      id: "korsar", cat: "ballet", title: "Корсар",
+      venue: "Михайловский театр", address: "пл. Искусств, 1",
+      dates: ["2026-11-29T13:00", "2026-11-29T18:00"], price: 2400, age: "6+", pushkin: true, vtbDiscount: 10,
+      desc: "Большой классический балет о пиратах, невольницах и морских приключениях на музыку Адана.",
+      source: "kuda-spb.ru"
+    },
+    {
+      id: "gollandets", cat: "ballet", title: "Летучий голландец",
+      venue: "Михайловский театр", address: "пл. Искусств, 1",
+      dates: ["2026-11-14T19:00"], price: 2200, age: "12+", pushkin: true, vtbDiscount: 0,
+      desc: "Мистическая опера Вагнера о проклятом капитане, обречённом скитаться по морям.",
+      source: "tripster.ru"
+    },
+    {
+      id: "alye-parusa", cat: "theatre", title: "Алые паруса",
+      venue: "ТЮЗ им. А. А. Брянцева", address: "Пионерская пл., 1",
+      dates: ["2026-11-28T19:00", "2026-12-03T19:00"], price: 1100, age: "12+", pushkin: true, vtbDiscount: 15,
+      desc: "Мюзикл по повести Александра Грина — главная петербургская история о мечте.",
+      source: "afisha.yandex.ru"
+    },
+    {
+      id: "nedorosl", cat: "theatre", title: "Недоросль",
+      venue: "Театр им. Ленсовета", address: "Владимирский пр., 12",
+      dates: ["2026-11-18T19:00", "2026-12-12T19:00"], price: 1000, age: "12+", pushkin: true, vtbDiscount: 10,
+      desc: "Фонвизин в остросовременной постановке: как воспитание делает из человека Митрофанушку.",
+      source: "culture.ru"
+    },
+    {
+      id: "tri-sestry", cat: "theatre", title: "Три сестры",
+      venue: "БДТ им. Г. А. Товстоногова", address: "наб. реки Фонтанки, 65",
+      dates: ["2026-12-29T19:00"], price: 1800, age: "16+", pushkin: true, vtbDiscount: 0,
+      desc: "Чеховская пьеса в БДТ — последний шанс потратить остаток Пушкинской карты в этом году.",
+      source: "culture.ru"
+    },
+    {
+      id: "scena-deystviya", cat: "exhibition", title: "Сцена действия",
+      venue: "Манеж", address: "Исаакиевская пл., 1",
+      dates: ["2026-10-01T11:00", "2027-02-28T21:00"], range: true, price: 500, age: "6+", pushkin: true, vtbDiscount: 20,
+      desc: "Выставка о театре как пространстве: сценография, макеты, костюмы и мультимедиа.",
+      source: "culture.ru"
+    },
+    {
+      id: "grinberg", cat: "exhibition", title: "Художник Ленинграда. Владимир Гринберг",
+      venue: "Музей искусства Санкт-Петербурга XX–XXI веков", address: "наб. канала Грибоедова, 103",
+      dates: ["2026-10-01T11:00", "2026-11-30T19:00"], range: true, price: 400, age: "0+", pushkin: true, vtbDiscount: 20,
+      desc: "Ретроспектива ленинградского живописца: город, набережные и портреты 1920–1940-х.",
+      source: "culture.ru"
+    },
+    {
+      id: "kentavry", cat: "exhibition", title: "Укрощение кентавров",
+      venue: "Музей современного искусства Эрарта", address: "29-я линия В. О., 2",
+      dates: ["2026-09-01T10:00", "2026-12-06T22:00"], range: true, price: 700, age: "16+", pushkin: true, vtbDiscount: 15,
+      desc: "Выставка современного искусства о дикой природе внутри человека и попытках её приручить.",
+      source: "kuda-spb.ru"
+    },
+    {
+      id: "rosfoto-kino", cat: "exhibition", title: "Кино…",
+      venue: "РОСФОТО", address: "Большая Морская ул., 35",
+      dates: ["2026-09-11T11:00", "2026-11-08T20:00"], range: true, price: 450, age: "12+", pushkin: true, vtbDiscount: 10,
+      desc: "Фотография и кинематограф: кадры со съёмок, портреты актёров и архивные материалы.",
+      source: "kuda-spb.ru"
+    }
+  ],
+
+  /* Закрытые события VTB ART Pass — концепция программы для пилота */
+  artpass: [
+    {
+      id: "ap-hermitage", title: "Эрмитаж до открытия",
+      place: "Главный штаб, залы модерна", date: "2026-12-07T09:00",
+      desc: "Экскурсия по новым залам модерна (Галле, Тиффани, ван де Вельде) за час до открытия музея — для 30 гостей.",
+      seats: 30, draw: "2026-11-30"
+    },
+    {
+      id: "ap-premiere", title: "Премьера + встреча с режиссёром",
+      place: "Александринский театр, Новая сцена", date: "2026-12-14T19:00",
+      desc: "Закрытый предпремьерный показ и разговор с постановочной командой после спектакля.",
+      seats: 50, draw: "2026-12-05"
+    },
+    {
+      id: "ap-backstage", title: "Закулисье Михайловского",
+      place: "Михайловский театр", date: "2026-12-20T12:00",
+      desc: "Репетиция балетной труппы, цеха декораций и костюмов — вход только по приглашению ВТБ.",
+      seats: 25, draw: "2026-12-12"
+    },
+    {
+      id: "ap-erarta", title: "Ночь в Эрарте с художником",
+      place: "Музей современного искусства Эрарта", date: "2026-12-26T21:00",
+      desc: "Ночной показ выставки с куратором и автором, диджей-сет и мастер-класс по скетчингу.",
+      seats: 60, draw: "2026-12-19"
+    }
+  ]
+};
+
+</script>
+  <script>
+/* ==========================================================================
+   ВТБ Культура — логика MVP (без сборки, без зависимостей)
+   ========================================================================== */
+(function () {
+  "use strict";
+
+  var D = window.VTB_DATA;
+  var NOW = new Date();
+  // Живая дата, пока идёт сезон; иначе — дата снимка афиши
+  var TODAY = NOW < new Date(D.user.pushkin.expires + "T23:59") && NOW > new Date(D.today) ? NOW : new Date(D.today + "T12:00");
+  var CASHBACK = 0.05;
+  var STORE_KEY = "vtb-kultura-state-v2";
+  var LEVELS = [
+    { name: "Зритель", from: 0, orb: 1 },
+    { name: "Ценитель", from: 3, orb: 2 },
+    { name: "Меценат", from: 6, orb: 3 }
+  ];
+
+  /* ---------- Состояние (localStorage — только удобство демо) ---------- */
+  function fresh() {
+    return { spent: D.user.pushkin.spent, cinemaSpent: D.user.pushkin.cinemaSpent, cashback: D.user.cashbackEarned, saved: 0, tickets: [], applied: {}, remind: true, cat: "all", fit: false, hide: false, q: "" };
+  }
+  var state = load();
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (raw) return Object.assign(fresh(), JSON.parse(raw), { q: "" });
+    } catch (e) { /* приватный режим и т. п. */ }
+    return fresh();
+  }
+  function save() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+  }
+
+  /* ---------- Утилиты ---------- */
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
+  var rub = function (n) { return Math.round(n).toLocaleString("ru-RU").replace(/[\s,]/g, " ") + " ₽"; };
+  var fmtDay = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long" });
+  var fmtShort = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "short" });
+  var fmtWd = new Intl.DateTimeFormat("ru-RU", { weekday: "short" });
+  var fmtTime = new Intl.DateTimeFormat("ru-RU", { hour: "2-digit", minute: "2-digit" });
+  function d(s) { return new Date(s); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function plural(n, a, b, c) { var m = n % 10, h = n % 100; return m === 1 && h !== 11 ? a : m >= 2 && m <= 4 && (h < 10 || h >= 20) ? b : c; }
+
+  var balance = function () { return Math.max(0, D.user.pushkin.limit - state.spent); };
+  var daysLeft = function () { return Math.ceil((d(D.user.pushkin.expires + "T23:59") - TODAY) / 864e5); };
+  var discounted = function (ev) { return Math.round(ev.price * (1 - ev.vtbDiscount / 100)); };
+  var findEv = function (id) { return D.events.filter(function (e) { return e.id === id; })[0]; };
+
+  function upcomingDates(ev) {
+    if (ev.range) return d(ev.dates[1]) >= TODAY ? ["range"] : [];
+    return ev.dates.filter(function (x) { return d(x) >= TODAY; });
+  }
+  function firstDate(ev) { return ev.range ? TODAY : d(upcomingDates(ev)[0]); }
+  function dateLabel(ev, x) {
+    if (x === "range") return "Любой день до " + fmtShort.format(d(ev.dates[1]));
+    var dt = d(x);
+    return fmtShort.format(dt) + ", " + fmtWd.format(dt) + " · " + fmtTime.format(dt);
+  }
+  function whenText(ev) {
+    var up = upcomingDates(ev);
+    if (ev.range) return "до " + fmtDay.format(d(ev.dates[1]));
+    var t = fmtShort.format(d(up[0])) + " · " + fmtTime.format(d(up[0]));
+    return up.length > 1 ? t + " и ещё " + (up.length - 1) : t;
+  }
+
+  /* ---------- Логотип ----------
+     Фирменный логотип ВТБ (три полосы + «ВТБ», файлы команды) и подпись «Культура».
+     Иконка сервиса — полосы ВТБ на «сияющем» градиенте с искрой. */
+  var uid = 0;
+  var VTB_STRIPES = "M41.5997 6.79874H7.3955L9.87607 0H44.0957L41.5997 6.79874ZM40.3517 10.1981H6.16292L3.69775 16.9969H37.9174L40.3517 10.1981ZM36.654 20.4117H2.46517L0 27.2104H34.2196L36.654 20.4117Z";
+  var VTB_LETTERS = "M123.166 44.16H129.329C130.203 44.2668 131.091 44.1563 131.913 43.8383C132.735 43.5204 133.466 43.0047 134.043 42.3367C134.89 41.2277 135.316 39.8531 135.245 38.4583C135.3 37.5712 135.136 36.6842 134.768 35.8756C134.4 35.067 133.839 34.3619 133.134 33.8228C131.99 33.0722 130.63 32.7242 129.267 32.8339H123.166V44.16ZM115.061 50.9896V10.1972H141.547L139.22 16.9959H123.166V26.0352H129.714C134.983 26.0352 137.741 27.3022 139.636 28.9246C140.996 30.1305 142.065 31.6307 142.762 33.3118C143.458 34.993 143.657 36.8252 143.657 38.6283C143.657 40.6278 143.38 42.5269 142.543 44.2919C141.706 46.057 140.442 47.5839 138.866 48.7337C136.323 50.5261 133.658 50.9896 128.235 50.9896H115.061ZM91.6115 50.9896V16.9959H79.8557V10.1972H112.473L110.208 16.9959H99.7773V50.9896H91.6115ZM59.0096 26.5142H63.6318C64.5632 26.5568 65.4959 26.4737 66.4051 26.2669C67.365 25.9565 68.1921 25.3295 68.7515 24.4878C69.3109 23.6462 69.5701 22.6395 69.4866 21.6314C69.6143 20.6312 69.3709 19.6188 68.8027 18.7869C68.2344 17.955 67.3812 17.3615 66.4051 17.1195C65.3961 16.8824 64.3587 16.7887 63.3237 16.8414H59.0096V26.5142ZM59.0096 33.5756V44.3918H64.7103C66.2648 44.5749 67.8292 44.1424 69.0706 43.1865C69.6299 42.6559 70.0659 42.0087 70.3482 41.2905C70.6304 40.5723 70.7518 39.8005 70.7038 39.03C70.7417 37.7661 70.3686 36.5241 69.6407 35.4916C68.4389 33.9464 66.9598 33.6528 64.433 33.6528L59.0096 33.5756ZM72.0442 29.2646V29.3573C73.4199 29.8766 74.7044 30.612 75.8498 31.536C77.0086 32.5035 77.9245 33.7306 78.5239 35.118C79.1234 36.5055 79.3896 38.0149 79.301 39.5245C79.301 45.1025 76.3428 49.12 71.4741 50.3407C69.5678 50.8309 67.602 51.0494 65.6348 50.9896H50.8438V10.1972H63.94C66.0102 10.123 68.0813 10.3151 70.1029 10.7689C74.8329 12.0359 77.9298 15.2962 77.9298 20.4417C77.9664 21.6682 77.7546 22.8894 77.307 24.0314C76.8596 25.1736 76.1855 26.2125 75.3259 27.0859C74.4075 28.0193 73.3128 28.7599 72.1058 29.2646H72.0442Z";
+  function spark(cx, cy, r, fill) {
+    var k = r * .22;
+    return '<path d="M' + cx + ' ' + (cy - r) + 'C' + (cx + k) + ' ' + (cy - k) + ' ' + (cx + k) + ' ' + (cy - k) + ' ' + (cx + r) + ' ' + cy +
+      'C' + (cx + k) + ' ' + (cy + k) + ' ' + (cx + k) + ' ' + (cy + k) + ' ' + cx + ' ' + (cy + r) +
+      'C' + (cx - k) + ' ' + (cy + k) + ' ' + (cx - k) + ' ' + (cy + k) + ' ' + (cx - r) + ' ' + cy +
+      'C' + (cx - k) + ' ' + (cy - k) + ' ' + (cx - k) + ' ' + (cy - k) + ' ' + cx + ' ' + (cy - r) + 'z" fill="' + fill + '"/>';
+  }
+  function vtbLogo(fill) {
+    return '<svg viewBox="0 0 144 51" role="img" aria-label="ВТБ"><path d="' + VTB_STRIPES + '" fill="' + fill + '"/><path d="' + VTB_LETTERS + '" fill="' + fill + '"/></svg>';
+  }
+  function logoLockup(light) {
+    var c = light ? "#fff" : "#0a2896", ink = light ? "#fff" : "#1b1d24";
+    return '<svg viewBox="0 0 352 60" role="img" aria-label="ВТБ Культура">' +
+      '<path d="' + VTB_STRIPES + '" fill="' + c + '"/><path d="' + VTB_LETTERS + '" fill="' + c + '"/>' +
+      '<rect x="157" y="10" width="2.4" height="41" rx="1.2" fill="' + ink + '" opacity=".35"/>' +
+      '<text x="172" y="50" font-family="Onest, Arial, sans-serif" font-weight="500" font-size="40" letter-spacing="-.5" fill="' + ink + '">Культура</text></svg>';
+  }
+  function appIcon() {
+    var id = "ic" + (++uid);
+    return '<svg viewBox="0 0 48 48" aria-hidden="true"><defs>' +
+      '<linearGradient id="' + id + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a23a0"/><stop offset=".6" stop-color="#1f5cff"/><stop offset="1" stop-color="#20b6ff"/></linearGradient>' +
+      '<radialGradient id="' + id + 'g" cx=".85" cy=".15" r=".6"><stop offset="0" stop-color="#7fe0ff" stop-opacity=".8"/><stop offset="1" stop-color="#7fe0ff" stop-opacity="0"/></radialGradient></defs>' +
+      '<rect width="48" height="48" rx="14" fill="url(#' + id + ')"/><rect width="48" height="48" rx="14" fill="url(#' + id + 'g)"/>' +
+      '<path d="' + VTB_STRIPES + '" fill="#fff" transform="translate(8.5 12) scale(.66)"/>' + spark(37, 35, 5.5, "#ff9cf3") + '</svg>';
+  }
+
+  /* ---------- Постер фильма (типографский, в духе киноафиши) ---------- */
+  function poster(ev) {
+    var id = "p" + (++uid), c = ev.poster.c, lines = ev.poster.lines;
+    var size = lines.some(function (l) { return l.length > 7; }) ? 26 : 34;
+    var y0 = 300 - 64 - (lines.length - 1) * (size * .98) - (ev.poster.sub ? 18 : 0);
+    var title = lines.map(function (l, i) {
+      return '<text x="16" y="' + (y0 + i * size * .98) + '" font-family="Onest, Arial, sans-serif" font-weight="700" font-size="' + size + '" letter-spacing="-1" fill="#fff">' + esc(l) + '</text>';
+    }).join("");
+    var sub = ev.poster.sub ? '<text x="16" y="' + (y0 + (lines.length - 1) * size * .98 + 22) + '" font-family="Onest, Arial, sans-serif" font-weight="500" font-size="13" fill="#fff" opacity=".85">' + esc(ev.poster.sub) + '</text>' : "";
+    return '<svg viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>' +
+      '<linearGradient id="' + id + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + c[1] + '"/><stop offset="1" stop-color="' + c[2] + '"/></linearGradient>' +
+      '<radialGradient id="' + id + 'r" cx=".7" cy=".28" r=".55"><stop offset="0" stop-color="' + c[0] + '"/><stop offset="1" stop-color="' + c[0] + '" stop-opacity="0"/></radialGradient></defs>' +
+      '<rect width="200" height="300" fill="url(#' + id + ')"/><rect width="200" height="300" fill="url(#' + id + 'r)"/>' +
+      '<circle cx="140" cy="84" r="54" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="1.5"/><circle cx="140" cy="84" r="34" fill="' + c[0] + '" opacity=".55"/>' +
+      '<path d="M0 150h200" stroke="#fff" stroke-opacity=".12"/>' +
+      '<text x="16" y="26" font-family="Onest, Arial, sans-serif" font-weight="600" font-size="10" letter-spacing="1.6" fill="#fff" opacity=".8">' + esc(ev.genre.toUpperCase()) + '</text>' +
+      title + sub +
+      '<rect x="16" y="268" width="30" height="16" rx="4" fill="none" stroke="#fff" stroke-opacity=".8"/><text x="31" y="280" text-anchor="middle" font-family="Onest, Arial, sans-serif" font-weight="600" font-size="9.5" fill="#fff">' + ev.age + '</text>' +
+      '<text x="184" y="280" text-anchor="end" font-family="Onest, Arial, sans-serif" font-weight="600" font-size="10" letter-spacing="1.2" fill="#fff" opacity=".8">В КИНО</text></svg>';
+  }
+  /* Обложка события: фото, если задано в data.js (поле img), иначе постер или иллюстрация */
+  function cover(ev) {
+    var fallback = ev.cat === "cinema" ? poster(ev) : art(ev.cat);
+    if (!ev.img) return fallback;
+    return '<img src="' + esc(ev.img) + '" alt="" loading="lazy" onerror="this.outerHTML=this.nextElementSibling.innerHTML"><template>' + fallback + '</template>';
+  }
+
+  /* ---------- Иллюстрации (объёмные формы в духе ВТБ Онлайн) ---------- */
+  var PALETTE = {
+    theatre: ["#5ab8ff", "#1a5cff"], ballet: ["#b48bff", "#4a3cd8"], concert: ["#34d0ff", "#1a6bff"],
+    exhibition: ["#8fd8ff", "#3c7bff"], pass: ["#e88bff", "#5a5cff"], deep: ["#2a3a9a", "#070d3a"]
+  };
+  function art(kind, bgKey) {
+    var id = "a" + (++uid), p = PALETTE[bgKey || kind] || PALETTE.theatre;
+    var defs = '<defs><linearGradient id="' + id + 'bg" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="' + p[0] + '"/><stop offset="1" stop-color="' + p[1] + '"/></linearGradient>' +
+      '<linearGradient id="' + id + 'o" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#cfe4ff"/><stop offset="1" stop-color="#6f9cff"/></linearGradient>' +
+      '<linearGradient id="' + id + 'p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd0fb"/><stop offset=".5" stop-color="#f07af2"/><stop offset="1" stop-color="#9b5cff"/></linearGradient>' +
+      '<linearGradient id="' + id + 'b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7fd0ff"/><stop offset=".5" stop-color="#2d7bff"/><stop offset="1" stop-color="#1638c9"/></linearGradient>' +
+      '<radialGradient id="' + id + 's" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#fff"/><stop offset=".35" stop-color="#d9ccff"/><stop offset="1" stop-color="#6b4fe0"/></radialGradient></defs>';
+    var o = "url(#" + id + "o)", pk = "url(#" + id + "p)", bl = "url(#" + id + "b)", sp = "url(#" + id + "s)";
+    var body = "";
+    if (kind === "theatre") {
+      body = '<g transform="rotate(-18 60 70)"><path d="M22 48h76v14a8 8 0 0 0 0 16v14H22V78a8 8 0 0 0 0-16z" fill="' + o + '"/><path d="M76 50v40" stroke="#8fb2ff" stroke-width="2" stroke-dasharray="3 4"/>' +
+        '<rect x="30" y="58" width="36" height="5" rx="2.5" fill="#7fa3f5"/><rect x="30" y="68" width="24" height="5" rx="2.5" fill="#a9c2fa"/></g>' + spark(92, 30, 9, "#fff");
+    } else if (kind === "ballet") {
+      body = '<ellipse cx="60" cy="96" rx="40" ry="9" fill="#000" opacity=".15"/><circle cx="60" cy="62" r="30" fill="' + sp + '"/><ellipse cx="60" cy="62" rx="46" ry="11" fill="none" stroke="' + pk + '" stroke-width="6" transform="rotate(-16 60 62)"/>' +
+        '<ellipse cx="50" cy="50" rx="9" ry="6" fill="#fff" opacity=".7"/>' + spark(98, 26, 8, "#fff");
+    } else if (kind === "concert") {
+      body = '<path d="M50 36l40-10v52" stroke="' + o + '" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 36v52" stroke="' + o + '" stroke-width="9" stroke-linecap="round"/>' +
+        '<ellipse cx="40" cy="90" rx="14" ry="11" fill="' + pk + '"/><ellipse cx="80" cy="80" rx="14" ry="11" fill="' + o + '"/><ellipse cx="36" cy="86" rx="5" ry="3" fill="#fff" opacity=".8"/>' + spark(26, 32, 8, "#fff");
+    } else if (kind === "exhibition") {
+      body = '<g transform="rotate(8 60 62)"><rect x="24" y="30" width="72" height="62" rx="8" fill="' + o + '"/><rect x="32" y="38" width="56" height="46" rx="4" fill="' + bl + '"/>' +
+        '<path d="M32 76l16-16 12 12 9-8 19 16v4H32z" fill="' + pk + '"/><circle cx="74" cy="50" r="6" fill="#fff"/></g>' + spark(100, 24, 7, "#fff");
+    } else if (kind === "pass") {
+      body = '<ellipse cx="60" cy="102" rx="34" ry="7" fill="#000" opacity=".15"/><path d="M60 18c4 22 12 30 34 34-22 4-30 12-34 34-4-22-12-30-34-34 22-4 30-12 34-34z" fill="' + o + '"/>' +
+        '<path d="M60 18c4 22 12 30 34 34-22 4-30 12-34 34z" fill="' + pk + '" opacity=".55"/>' + spark(96, 84, 9, "#fff") + spark(24, 90, 5, "#ffd0fb");
+    } else if (kind === "gift") {
+      body = '<g transform="rotate(-8 60 80)"><rect x="22" y="62" width="76" height="50" rx="8" fill="' + bl + '"/><rect x="16" y="46" width="88" height="22" rx="7" fill="' + o + '"/>' +
+        '<rect x="52" y="46" width="16" height="66" fill="' + pk + '"/><path d="M60 46c-14-22-34-14-24-2 6 6 24 2 24 2zm0 0c14-22 34-14 24-2-6 6-24 2-24 2z" fill="none" stroke="' + pk + '" stroke-width="7" stroke-linejoin="round"/></g>';
+    }
+    var bg = bgKey === "none" ? "" : '<rect width="120" height="120" fill="url(#' + id + 'bg)"/><path d="M60 0h70v16H54zM80 26h50v16H74z" fill="#fff" opacity=".08"/>';
+    return '<svg viewBox="0 0 120 120" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' + defs + bg + body + '</svg>';
+  }
+
+  var CAT_LABEL = { cinema: "Кино", theatre: "Театр", ballet: "Балет и опера", concert: "Концерт", exhibition: "Выставка" };
+  var BELL = '<svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0"/></svg>';
+
+  /* ---------- Главная: баланс ---------- */
+  function renderHero() {
+    var dl = daysLeft();
+    $("#balanceSum").textContent = state.hide ? "•••• ₽" : rub(balance());
+    $("#remindBtn").innerHTML = BELL + (state.remind ? "Напомню в декабре" : "Напомнить о сгорании");
+    $("#burnTile").innerHTML = '<span>Сгорит<br>31 декабря</span><span><b>' + dl + ' ' + plural(dl, "день", "дня", "дней") + '</b><small>потрачено ' + rub(state.spent) + ' из ' + rub(D.user.pushkin.limit) + '</small></span>';
+  }
+
+  function renderStories() {
+    var fit = D.events.filter(function (ev) { return upcomingDates(ev).length && discounted(ev) <= balance(); }).length;
+    var items = [
+      { cls: 1, art: "theatre", t: "Подборка на остаток · " + fit, act: "fit" },
+      { cls: 2, art: "gift", t: "Скидки клиентам ВТБ", act: "discount", bg: "deep" },
+      { cls: 3, art: "pass", t: "Розыгрыш ART Pass", act: "artpass" },
+      { cls: 4, art: "exhibition", t: "Выставки ноября", act: "exhibition" },
+      { cls: 2, art: "concert", t: "Кино на Пушкинскую", act: "cinema", bg: "deep" }
+    ];
+    $("#stories").innerHTML = items.map(function (s) {
+      return '<button class="story story--' + s.cls + '" data-story="' + s.act + '"><span class="story__art">' + art(s.art, s.bg) + '</span><span>' + s.t + '</span></button>';
+    }).join("");
+  }
+
+  /* ---------- Кино: лента постеров ---------- */
+  function renderCinema() {
+    var films = D.events.filter(function (ev) { return ev.cat === "cinema" && upcomingDates(ev).length; });
+    var left = D.user.pushkin.cinemaLimit - state.cinemaSpent;
+    $("#cinemaSub").textContent = "На кино по Пушкинской карте осталось " + rub(left) + " из " + rub(D.user.pushkin.cinemaLimit);
+    $("#cinemaRail").innerHTML = films.map(function (ev) {
+      return '<button class="film" data-ev="' + ev.id + '"><span class="film__poster">' + cover(ev) + '</span>' +
+        '<span class="film__title">' + esc(ev.title) + '</span><span class="film__meta">' + esc(ev.venue.replace("Кинотеатр ", "")) + ' · от ' + rub(discounted(ev)) + '</span></button>';
+    }).join("");
+  }
+
+  /* ---------- Афиша ---------- */
+  function renderChips() {
+    var chips = D.categories.concat([{ id: "discount", label: "Скидка ВТБ" }]);
+    $("#chips").innerHTML = chips.map(function (c) {
+      return '<button class="chip' + (state.cat === c.id ? " is-on" : "") + '" data-cat="' + c.id + '" role="tab" aria-selected="' + (state.cat === c.id) + '">' + c.label + '</button>';
+    }).join("");
+  }
+  function filtered() {
+    var b = balance(), q = state.q.trim().toLowerCase();
+    return D.events
+      .filter(function (ev) { return upcomingDates(ev).length; })
+      .filter(function (ev) { return state.cat === "discount" ? ev.vtbDiscount > 0 : state.cat === "all" || ev.cat === state.cat; })
+      .filter(function (ev) { return !state.fit || (ev.pushkin && discounted(ev) <= b && (ev.cat !== "cinema" || discounted(ev) <= D.user.pushkin.cinemaLimit - state.cinemaSpent)); })
+      .filter(function (ev) { return !q || (ev.title + " " + ev.venue).toLowerCase().indexOf(q) !== -1; })
+      .sort(function (a, b2) { return firstDate(a) - firstDate(b2); });
+  }
+  function evCard(ev) {
+    var p = discounted(ev), tags = "";
+    if (ev.vtbDiscount) tags += '<span class="tag tag--vtb">−' + ev.vtbDiscount + '%</span>';
+    if (ev.pushkin) tags += '<span class="tag tag--pk">Пушкинская</span>';
+    if (ev.pushkin && p <= balance()) tags += '<span class="tag tag--ok">хватает</span>';
+    return '<button class="ev' + (ev.cat === "cinema" ? " ev--poster" : "") + '" data-ev="' + ev.id + '">' +
+      '<span class="ev__art">' + cover(ev) + '</span>' +
+      '<span class="ev__body">' +
+      '<span class="ev__cat">' + CAT_LABEL[ev.cat] + ' · ' + ev.age + '</span>' +
+      '<span class="ev__title">' + esc(ev.title) + '</span>' +
+      '<span class="ev__place">' + esc(ev.venue) + '</span>' +
+      '<span class="ev__place">' + whenText(ev) + '</span>' +
+      '<span class="ev__row"><span class="price">от ' + rub(p) + (ev.vtbDiscount ? '<s>' + rub(ev.price) + '</s>' : "") + '</span></span>' +
+      '<span class="ev__row" style="padding-top:2px">' + tags + '</span>' +
+      '</span></button>';
+  }
+  function renderAfisha() {
+    renderHero();
+    renderStories();
+    renderCinema();
+    renderChips();
+    $("#fitToggle").checked = state.fit;
+    var list = filtered();
+    $("#listTitle").textContent = state.fit ? "На ваш остаток" : "Афиша";
+    $("#listCount").textContent = list.length + " " + plural(list.length, "событие", "события", "событий");
+    $("#eventList").innerHTML = list.length
+      ? list.map(evCard).join("") + '<p class="source-note">Даты — открытые афиши Петербурга (Культура.РФ, Яндекс Афиша, сайты площадок). Цены ориентировочные, скидки ВТБ — предложение для пилота.</p>'
+      : '<div class="empty">Нет событий под этот фильтр.<br>Попробуйте другую категорию.</div>';
+  }
+
+  /* ---------- Карточка события и покупка ---------- */
+  var buy = null;
+  function openEvent(id) {
+    var ev = findEv(id);
+    if (!ev) return;
+    buy = { ev: ev, date: upcomingDates(ev)[0], qty: 1, pay: discounted(ev) <= balance() ? "pk" : "vtb" };
+    renderSheet();
+    $("#sheet").hidden = false;
+  }
+  function renderSheet() {
+    var ev = buy.ev, unit = discounted(ev), total = unit * buy.qty, full = ev.price * buy.qty;
+    var cinemaLeft = D.user.pushkin.cinemaLimit - state.cinemaSpent;
+    var pkOk = ev.pushkin && total <= balance() && (ev.cat !== "cinema" || total <= cinemaLeft);
+    if (buy.pay === "pk" && !pkOk) buy.pay = "vtb";
+    var cb = buy.pay === "vtb" ? Math.min(Math.round(total * CASHBACK), Math.max(0, D.user.cashbackMonthCap - state.cashback)) : 0;
+
+    $("#sheetPanel").innerHTML =
+      (ev.cat === "cinema" ? '<div class="sheet__hero sheet__hero--poster" style="background:linear-gradient(160deg,' + ev.poster.c[1] + ',' + ev.poster.c[2] + ')"><span class="sheet__poster">' + cover(ev) + '</span>' : '<div class="sheet__hero">' + cover(ev)) + '<span class="sheet__grab"></span><button class="sheet__close" data-close aria-label="Закрыть">×</button>' +
+      '<span class="ev__cat">' + CAT_LABEL[ev.cat] + ' · ' + ev.age + '</span><h3>' + esc(ev.title) + '</h3>' +
+      '<p>' + esc(ev.venue) + ' · ' + esc(ev.address) + '</p></div>' +
+      '<div class="sheet__content">' +
+      '<p class="sheet__desc">' + esc(ev.desc) + '</p>' +
+      '<div class="opt-title">Дата и время</div><div class="dates">' +
+      upcomingDates(ev).map(function (x) { return '<button class="date-btn' + (x === buy.date ? " is-on" : "") + '" data-date="' + x + '">' + dateLabel(ev, x) + '</button>'; }).join("") +
+      '</div>' +
+      '<div class="qty"><span>Билеты</span><div class="qty__ctrl"><button data-qty="-1" aria-label="Меньше">−</button><b>' + buy.qty + '</b><button data-qty="1" aria-label="Больше">+</button></div></div>' +
+      '<div class="opt-title">Способ оплаты</div>' +
+      '<button class="pay' + (buy.pay === "pk" ? " is-on" : "") + '" data-pay="pk"' + (pkOk ? "" : " disabled") + '>' +
+      '<i class="mini-card mini-card--pk">МИР</i><span class="pay__txt">Пушкинская карта<small>' + (ev.pushkin ? (pkOk ? "Остаток " + rub(balance()) + (ev.cat === "cinema" ? ", на кино " + rub(cinemaLeft) : "") : ev.cat === "cinema" && total > cinemaLeft ? "Лимит на кино: осталось " + rub(cinemaLeft) : "Не хватает остатка — " + rub(balance())) : "Событие не участвует в программе") + '</small></span></button>' +
+      '<button class="pay' + (buy.pay === "vtb" ? " is-on" : "") + '" data-pay="vtb">' +
+      '<i class="mini-card">ВТБ</i><span class="pay__txt">Карта ВТБ ' + D.user.vtbCard + '<small>Кешбэк 5% на культуру · до ' + rub(D.user.cashbackMonthCap) + ' в мес.</small></span></button>' +
+      '<div class="summary">' +
+      '<div><span>' + buy.qty + ' × ' + rub(ev.price) + '</span><span>' + rub(full) + '</span></div>' +
+      (ev.vtbDiscount ? '<div class="hl"><span>Скидка клиентам ВТБ −' + ev.vtbDiscount + '%</span><span>−' + rub(full - total) + '</span></div>' : "") +
+      (cb ? '<div class="hl"><span>Вернётся кешбэком</span><span>+' + rub(cb) + '</span></div>' : "") +
+      '<div class="total"><span>К оплате</span><span>' + rub(total) + '</span></div>' +
+      '</div></div>' +
+      '<div class="sheet__cta"><button class="btn btn--primary btn--block" id="payBtn">Оплатить ' + rub(total) + '</button></div>';
+    $("#payBtn").onclick = function () { pay(total, full - total, cb); };
+  }
+  function pay(total, saved, cb) {
+    var ev = buy.ev;
+    if (buy.pay === "pk") { state.spent += total; if (ev.cat === "cinema") state.cinemaSpent += total; }
+    state.cashback += cb;
+    state.saved += saved;
+    state.tickets.unshift({ id: ev.id + "-" + Date.now().toString(36), ev: ev.id, date: buy.date, qty: buy.qty, total: total, pay: buy.pay });
+    save();
+    $("#sheetPanel").innerHTML =
+      '<div class="success"><div class="success__icon">' + art("pass", "none") + '</div>' +
+      '<h3>Билет в кармане</h3>' +
+      '<p>«' + esc(ev.title) + '», ' + dateLabel(ev, buy.date) + '.<br>' +
+      (buy.pay === "pk" ? "Остаток Пушкинской карты: <b>" + rub(balance()) + "</b>." : "Кешбэк <b>+" + rub(cb) + "</b> придёт с выпиской.") +
+      '<br>Вам открыт розыгрыш <b>VTB ART Pass</b>.</p>' +
+      '<button class="btn btn--primary btn--block" data-goto="artpass">Участвовать в ART Pass</button>' +
+      '<button class="btn btn--soft btn--block" data-goto="tickets">Открыть билет</button></div>';
+    renderAll();
+  }
+  function closeSheet() { $("#sheet").hidden = true; buy = null; }
+
+  /* ---------- ART Pass ---------- */
+  function renderArtPass() {
+    var hasTicket = state.tickets.length > 0, appliedN = Object.keys(state.applied).length;
+    $(".hero__art[data-art]").innerHTML = art("pass", "none");
+    $("#apSteps").innerHTML =
+      '<div class="' + (hasTicket ? "is-done" : "") + '"><span class="step__n">' + (hasTicket ? "✓" : "1") + '</span>Купить билет через афишу ВТБ Культуры</div>' +
+      '<div class="' + (appliedN ? "is-done" : "") + '"><span class="step__n">' + (appliedN ? "✓" : "2") + '</span>Подать заявку на событие' + (appliedN ? " · " + appliedN : "") + '</div>' +
+      '<div><span class="step__n">3</span>Дождаться розыгрыша — приглашение придёт пушем</div>';
+    $("#apList").innerHTML = D.artpass.map(function (a) {
+      var btn = state.applied[a.id]
+        ? '<span class="tag tag--ok">Заявка принята</span>'
+        : hasTicket
+          ? '<button class="btn btn--primary" data-apply="' + a.id + '">Подать заявку</button>'
+          : '<button class="btn btn--soft" data-go="afisha">Сначала билет</button>';
+      return '<div class="ap"><div class="ap__top"><span class="ap__icon">' + art("pass") + '</span><div>' +
+        '<div class="ap__title">' + esc(a.title) + '</div>' +
+        '<div class="ap__meta">' + esc(a.place) + '<br>' + fmtDay.format(d(a.date)) + ' · ' + fmtTime.format(d(a.date)) + ' · ' + a.seats + ' мест</div>' +
+        '</div></div><p class="ap__desc">' + esc(a.desc) + '</p>' +
+        '<div class="ap__foot"><span class="muted">Розыгрыш ' + fmtDay.format(d(a.draw + "T12:00")) + '</span>' + btn + '</div></div>';
+    }).join("") + '<p class="source-note">VTB ART Pass — концепция команды: программа закрытых событий ВТБ для пилота.</p>';
+  }
+
+  /* ---------- Билеты ---------- */
+  function qr(seed) {
+    var n = 21, cells = "", h = 0, i;
+    for (i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+    function rnd() { h ^= h << 13; h >>>= 0; h ^= h >> 17; h ^= h << 5; h >>>= 0; return h / 4294967296; }
+    function finder(x, y) { return (x < 7 && y < 7) || (x > n - 8 && y < 7) || (x < 7 && y > n - 8); }
+    for (var y = 0; y < n; y++) for (var x = 0; x < n; x++) {
+      if (!finder(x, y) && rnd() > .52) cells += '<rect x="' + x + '" y="' + y + '" width="1" height="1"/>';
+    }
+    var f = function (x, y) { return '<rect x="' + (x + .5) + '" y="' + (y + .5) + '" width="6" height="6" fill="none" stroke="#1b1d24" stroke-width="1"/><rect x="' + (x + 2) + '" y="' + (y + 2) + '" width="3" height="3"/>'; };
+    return '<svg class="ticket__qr" viewBox="0 0 21 21" shape-rendering="crispEdges"><g fill="#1b1d24">' + cells + f(0, 0) + f(n - 7, 0) + f(0, n - 7) + '</g></svg>';
+  }
+  function renderTickets() {
+    var badge = $("#ticketBadge");
+    badge.hidden = !state.tickets.length;
+    badge.textContent = state.tickets.length;
+    if (!state.tickets.length) {
+      $("#ticketList").innerHTML = '<div class="empty">Пока нет билетов.<br>Первый билет через афишу открывает розыгрыш ART Pass.<br><br><button class="btn btn--primary" data-go="afisha">Открыть афишу</button></div>';
+      return;
+    }
+    $("#ticketList").innerHTML = state.tickets.map(function (t) {
+      var ev = findEv(t.ev);
+      if (!ev) return "";
+      return '<div class="ticket"><div class="ticket__head">' + cover(ev) + '<div><b>' + esc(ev.title) + '</b><span>' + esc(ev.venue) + '</span></div></div>' +
+        '<div class="ticket__body">' + qr(t.id) + '<div class="ticket__info">' +
+        '<b>' + dateLabel(ev, t.date) + '</b><br>' + t.qty + ' ' + plural(t.qty, "билет", "билета", "билетов") + ' · ' + rub(t.total) + '<br>' +
+        (t.pay === "pk" ? "Пушкинская карта" : "Карта ВТБ " + D.user.vtbCard) + '<br>' + esc(ev.address) +
+        '</div></div></div>';
+    }).join("");
+  }
+
+  /* ---------- Выгода ---------- */
+  function level() {
+    var n = state.tickets.length, cur = LEVELS[0];
+    LEVELS.forEach(function (l) { if (n >= l.from) cur = l; });
+    return cur;
+  }
+  function renderProfile() {
+    var cap = D.user.cashbackMonthCap, n = state.tickets.length, lv = level();
+    var next = LEVELS[LEVELS.indexOf(lv) + 1];
+    var max = LEVELS[LEVELS.length - 1].from;
+    var pct = Math.min(100, n / max * 100);
+    $("#benefitSum").textContent = rub(state.saved + state.cashback);
+    $("#levelRow").innerHTML =
+      '<div><span class="orb orb--' + lv.orb + '"></span><span><small>Ваш уровень</small><b>' + lv.name + '</b></span></div>' +
+      '<div><span class="orb orb--3 orb--sm"></span><span><small>' + (next ? "До «" + next.name + "»" : "Максимум") + '</small><b>' + (next ? (next.from - n) + " " + plural(next.from - n, "билет", "билета", "билетов") : "достигнут") + '</b></span></div>';
+
+    $("#profileBody").innerHTML =
+      '<section class="block block--overlap">' +
+      '<div class="tiles2">' +
+      '<button class="tile" data-go="tickets"><span class="tile__t">Скидки<br>на билеты <span>›</span></span><span class="tile__v">' + rub(state.saved) + '</span></button>' +
+      '<div class="tile"><span class="tile__t">Кешбэк 5% <span>›</span></span><span class="tile__v">' + rub(state.cashback) + '</span></div>' +
+      '</div>' +
+      '<div class="tile-row"><span>Подберите события<br>на остаток карты</span><button class="btn btn--primary" data-story="fit">Выбрать</button></div>' +
+      '</section>' +
+
+      '<section class="block">' +
+      '<div class="block__head"><h2>Расти с ВТБ Культурой</h2></div>' +
+      '<p class="block__sub">Покупайте билеты через афишу: уровень даёт больше скидок и шансов в розыгрыше ART Pass.</p>' +
+      '<div class="track-card"><div class="track-card__t">' + (next ? "Ещё " + (next.from - n) + " " + plural(next.from - n, "билет", "билета", "билетов") + " до уровня «" + next.name + "» ›" : "Вы на максимальном уровне") + '</div>' +
+      '<div class="track-scale">' + LEVELS.map(function (l) { return "<span>" + l.name + "</span>"; }).join("") + '</div>' +
+      '<div class="track"><span class="track__fill" style="width:' + pct + '%"></span>' +
+      LEVELS.map(function (l) { return '<span class="orb orb--sm orb--' + l.orb + '" style="left:' + (l.from / max * 100) + '%"></span>'; }).join("") + '</div>' +
+      '<div class="track-foot">' + n + ' / ' + max + ' ' + plural(max, "билет", "билета", "билетов") + '</div></div>' +
+      '<div class="track-card"><div class="track-card__t">Кешбэк в этом месяце — ещё ' + rub(Math.max(0, cap - state.cashback)) + ' до лимита ›</div>' +
+      '<div class="track-scale"><span>0 ₽</span><span>' + rub(cap) + '</span></div>' +
+      '<div class="track"><span class="track__fill" style="width:' + Math.min(100, state.cashback / cap * 100) + '%"></span></div></div>' +
+      '<div class="track-card"><div class="track-card__t">Пушкинская карта — осталось ' + rub(balance()) + ' ›</div>' +
+      '<div class="track-scale"><span>0 ₽</span><span>' + rub(D.user.pushkin.limit) + '</span></div>' +
+      '<div class="track"><span class="track__fill" style="width:' + (state.spent / D.user.pushkin.limit * 100) + '%"></span></div>' +
+      '<div class="track-foot" style="font-weight:400;color:var(--muted);font-size:13.5px;text-align:left">Из них до ' + rub(D.user.pushkin.cinemaLimit) + ' — на кино. Остаток сгорает 31 декабря.</div></div>' +
+      '</section>' +
+
+      '<section class="block">' +
+      '<div class="block__head"><h2>Культура вместе с вами</h2></div>' +
+      '<div class="journey">' +
+      '<div class="is-now"><em>Сейчас</em>' + D.user.age + ' лет · Пушкинская карта + скидки ВТБ на афишу</div>' +
+      '<div><em>Лимит</em>Кончился лимит — кешбэк 5% по карте ВТБ, до 1 000 ₽ в месяц</div>' +
+      '<div><em>22+</em>Сервис остаётся: кешбэк, скидки и закрытые события ART Pass</div>' +
+      '</div></section>' +
+
+      '<section class="block">' +
+      '<label class="setting toggle"><span style="flex:1">Напомнить о сгорающем остатке в декабре</span><input type="checkbox" id="remindToggle"' + (state.remind ? " checked" : "") + '><span class="toggle__track"><span class="toggle__dot"></span></span></label>' +
+      '<div class="setting"><span>Пример пуш-уведомления</span><button class="link-btn" id="demoPush">Показать</button></div>' +
+      '<div class="setting"><span>Сбросить демо-данные</span><button class="link-btn" id="resetBtn">Сбросить</button></div>' +
+      '</section>';
+
+    $("#remindToggle").onchange = function (e) { state.remind = e.target.checked; save(); renderHero(); };
+    $("#demoPush").onclick = showPush;
+    $("#resetBtn").onclick = function () { state = fresh(); save(); renderAll(); toast("Демо сброшено"); };
+  }
+
+  /* ---------- Навигация, пуш, тост ---------- */
+  function go(name) {
+    $$(".screen").forEach(function (s) { s.classList.toggle("is-active", s.dataset.screen === name); });
+    $$(".tabbar button").forEach(function (b) { b.classList.toggle("is-active", b.dataset.go === name); });
+    $("#screens").scrollTop = 0;
+    $("#app").classList.remove("is-light-top");
+  }
+  function showAfishaList() {
+    go("afisha"); renderAfisha();
+    setTimeout(function () { $("#afishaBlock").scrollIntoView({ behavior: "smooth", block: "start" }); }, 30);
+  }
+  function story(act) {
+    if (act === "artpass") return go("artpass");
+    state.fit = act === "fit";
+    state.cat = act === "discount" || act === "exhibition" || act === "cinema" ? act : "all";
+    save(); showAfishaList();
+  }
+
+  var pushTimer;
+  function showPush() {
+    var fit = D.events.filter(function (ev) { return upcomingDates(ev).length && ev.pushkin && discounted(ev) <= balance(); }).length;
+    $("#pushText").textContent = rub(balance()) + " на Пушкинской карте сгорят 31 декабря. Подобрали " + fit + " " + plural(fit, "событие", "события", "событий") + " на остаток";
+    var p = $("#push");
+    p.hidden = true; void p.offsetWidth; p.hidden = false;
+    clearTimeout(pushTimer);
+    pushTimer = setTimeout(function () { p.hidden = true; }, 6000);
+  }
+  var toastTimer;
+  function toast(msg) {
+    var t = $("#toast");
+    t.textContent = msg; t.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.hidden = true; }, 2200);
+  }
+
+  function renderAll() { renderAfisha(); renderArtPass(); renderTickets(); renderProfile(); }
+
+  /* ---------- События ---------- */
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-cat],[data-ev],[data-go],[data-goto],[data-close],[data-date],[data-qty],[data-pay],[data-apply],[data-story]");
+    if (!t) return;
+    if (t.dataset.cat) { state.cat = t.dataset.cat; save(); renderAfisha(); }
+    else if (t.dataset.ev) openEvent(t.dataset.ev);
+    else if (t.dataset.story) { closeSheet(); story(t.dataset.story); }
+    else if (t.dataset.go) go(t.dataset.go);
+    else if (t.dataset.goto) { closeSheet(); go(t.dataset.goto); }
+    else if (t.hasAttribute("data-close")) closeSheet();
+    else if (t.dataset.date) { buy.date = t.dataset.date; renderSheet(); }
+    else if (t.dataset.qty) { buy.qty = Math.min(6, Math.max(1, buy.qty + Number(t.dataset.qty))); renderSheet(); }
+    else if (t.dataset.pay && !t.disabled) { buy.pay = t.dataset.pay; renderSheet(); }
+    else if (t.dataset.apply) { state.applied[t.dataset.apply] = true; save(); renderArtPass(); toast("Заявка принята — результат розыгрыша придёт пушем"); }
+  });
+  $("#fitToggle").addEventListener("change", function (e) { state.fit = e.target.checked; save(); renderAfisha(); });
+  $("#pickBtn").onclick = function () { story("fit"); };
+  $("#discountBanner").onclick = function () { story("discount"); };
+  $("#searchBtn").onclick = function () {
+    showAfishaList();
+    setTimeout(function () { $("#searchInput").focus({ preventScroll: true }); }, 350);
+  };
+  $("#searchInput").addEventListener("input", function (e) { state.q = e.target.value; renderAfisha(); });
+  $("#remindBtn").onclick = function () {
+    state.remind = !state.remind; save(); renderHero(); renderProfile();
+    toast(state.remind ? "Напомним в декабре о сгорающем остатке" : "Напоминания выключены");
+  };
+  $("#eyeBtn").onclick = function () { state.hide = !state.hide; save(); renderHero(); };
+  $("#push").addEventListener("click", function () { $("#push").hidden = true; story("fit"); });
+  $("#screens").addEventListener("scroll", function (e) { $("#app").classList.toggle("is-light-top", e.target.scrollTop > 340); }, { passive: true });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("#sheet").hidden) closeSheet(); });
+
+  /* ---------- Старт ---------- */
+  $$("[data-logo]").forEach(function (el) { el.innerHTML = logoLockup(el.dataset.logo === "light"); });
+  $$("[data-vtb]").forEach(function (el) { el.innerHTML = vtbLogo("#fff"); });
+  $$("[data-icon]").forEach(function (el) { el.innerHTML = appIcon(); });
+  $$('[data-art="pass"]').forEach(function (el) { el.innerHTML = art("pass", "none"); });
+  $$('[data-art="gift"]').forEach(function (el) { el.innerHTML = art("gift", "none"); });
+  $("#userName").textContent = D.user.name;
+  $("#clock").textContent = fmtTime.format(NOW);
+  renderAll();
+  setTimeout(showPush, 1900);
+})();
+
+</script>
+</body>
+</html>
