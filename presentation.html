@@ -514,7 +514,7 @@ svg { display: block; }
 
             <section class="block" id="afishaBlock">
               <div class="block__head"><h2 id="listTitle">Афиша</h2><span class="muted" id="listCount"></span></div>
-              <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="searchInput" placeholder="Спектакль, площадка" autocomplete="off"></label>
+              <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="searchInput" placeholder="Спектакль, фильм, площадка, жанр" autocomplete="off"></label>
               <div class="chips" id="chips" role="tablist"></div>
               <label class="toggle">
                 <input type="checkbox" id="fitToggle">
@@ -1027,15 +1027,89 @@ window.VTB_DATA = {
       return '<button class="chip' + (state.cat === c.id ? " is-on" : "") + '" data-cat="' + c.id + '" role="tab" aria-selected="' + (state.cat === c.id) + '">' + c.label + '</button>';
     }).join("");
   }
+  /* ---------- Умный поиск ----------
+     Работает в браузере без сервера: нормализация (регистр, ё→е, кавычки), поиск по началу слова,
+     опечатки (расстояние Дамерау — Левенштейна), неверная раскладка (ytdthm → невер…),
+     синонимы категорий (фильм → кино, музей → выставка). Результаты сортируются по релевантности. */
+  var SYN = {
+    cinema: "кино фильм фильмы сеанс кинотеатр мультфильм",
+    theatre: "театр спектакль постановка пьеса драма комедия мюзикл",
+    ballet: "балет опера танец оперный",
+    concert: "концерт музыка оркестр органный орган классика хор",
+    exhibition: "выставка музей экспозиция искусство галерея живопись фото"
+  };
+  var EN = "qwertyuiop[]asdfghjkl;'zxcvbnm,.`", RU = "йцукенгшщзхъфывапролджэячсмитьбюё";
+  function words(str) {
+    return String(str).toLowerCase().replace(/ё/g, "е").replace(/[«»"'“”„.,:;!?()\[\]\/\\+&–—-]/g, " ").split(/\s+/).filter(Boolean);
+  }
+  function fromLayout(w) {
+    return w.split("").map(function (ch) { var i = EN.indexOf(ch); return i === -1 ? ch : RU[i]; }).join("").replace(/ё/g, "е");
+  }
+  function dist(a, b, max) {
+    if (Math.abs(a.length - b.length) > max) return max + 1;
+    var d = [], i, j;
+    for (i = 0; i <= a.length; i++) { d[i] = [i]; }
+    for (j = 0; j <= b.length; j++) d[0][j] = j;
+    for (i = 1; i <= a.length; i++) for (j = 1; j <= b.length; j++) {
+      var c = a[i - 1] === b[j - 1] ? 0 : 1;
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + c);
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+    }
+    return d[a.length][b.length];
+  }
+  function wordScore(q, w) {
+    if (w === q) return 3;
+    if (w.indexOf(q) === 0) return q.length === 1 ? 1 : 2.5;
+    if (q.length >= 4 && w.indexOf(q) > 0) return 2; // часть составного слова: «гамлет» в «ШекспирГамлет»
+    if (q.length < 4) return 0;
+    var tol = q.length >= 8 ? 2 : 1;
+    if (dist(q, w, tol) <= tol) return 1.6;
+    if (w.length > q.length && dist(q, w.slice(0, q.length), tol) <= tol) return 1.4;
+    return 0;
+  }
+  var indexCache = {};
+  function fields(ev) {
+    if (!indexCache[ev.id]) indexCache[ev.id] = [
+      { w: words(ev.title), k: 3 },
+      { w: words(ev.venue + " " + (ev.genre || "") + " " + CAT_LABEL[ev.cat] + " " + SYN[ev.cat]), k: 1.5 },
+      { w: words(ev.address), k: 1 },
+      { w: words(ev.desc), k: .6 }
+    ];
+    return indexCache[ev.id];
+  }
+  function matchScore(ev, q) {
+    var qs = words(q), total = 0;
+    for (var i = 0; i < qs.length; i++) {
+      var best = 0, variants = [qs[i]], alt = fromLayout(qs[i]);
+      if (alt !== qs[i]) variants.push(alt);
+      fields(ev).forEach(function (f) {
+        variants.forEach(function (v, vi) {
+          f.w.forEach(function (w) {
+            var sc = wordScore(v, w) * f.k * (vi ? .9 : 1);
+            if (f.k < 1 && sc < 2.5 * f.k) sc = 0; // описание — только точные совпадения и начало слова
+            if (sc > best) best = sc;
+          });
+        });
+      });
+      if (!best && qs[i].length > 1) return 0; // однобуквенные слова («к», «и») необязательны
+      total += best;
+    }
+    return total;
+  }
   function filtered() {
-    var b = balance(), q = state.q.trim().toLowerCase();
-    return D.events
+    var b = balance(), q = state.q.trim();
+    var list = D.events
       .filter(function (ev) { return upcomingDates(ev).length; })
       .filter(function (ev) { return state.cat === "discount" ? ev.vtbDiscount > 0 : state.cat === "all" || ev.cat === state.cat; })
-      .filter(function (ev) { return !state.fit || (ev.pushkin && discounted(ev) <= b && (ev.cat !== "cinema" || discounted(ev) <= D.user.pushkin.cinemaLimit - state.cinemaSpent)); })
-      .filter(function (ev) { return !q || (ev.title + " " + ev.venue).toLowerCase().indexOf(q) !== -1; })
-      .sort(function (a, b2) { return firstDate(a) - firstDate(b2); });
+      .filter(function (ev) { return !state.fit || (ev.pushkin && discounted(ev) <= b && (ev.cat !== "cinema" || discounted(ev) <= D.user.pushkin.cinemaLimit - state.cinemaSpent)); });
+    if (!q) return list.sort(function (a, b2) { return firstDate(a) - firstDate(b2); });
+    return list
+      .map(function (ev) { return { ev: ev, s: matchScore(ev, q) }; })
+      .filter(function (x) { return x.s > 0; })
+      .sort(function (a, b2) { return b2.s - a.s || firstDate(a.ev) - firstDate(b2.ev); })
+      .map(function (x) { return x.ev; });
   }
+  window.VTB_SEARCH = function (q) { var keep = state.q; state.q = q; var r = filtered().map(function (e) { return e.title; }); state.q = keep; return r; };
   function evCard(ev) {
     var p = discounted(ev), tags = "";
     if (ev.vtbDiscount) tags += '<span class="tag tag--vtb">−' + ev.vtbDiscount + '%</span>';
@@ -1063,7 +1137,9 @@ window.VTB_DATA = {
     $("#listCount").textContent = list.length + " " + plural(list.length, "событие", "события", "событий");
     $("#eventList").innerHTML = list.length
       ? list.map(evCard).join("") + '<p class="source-note">Даты — открытые афиши Петербурга (Культура.РФ, Яндекс Афиша, сайты площадок). Цены ориентировочные, скидки ВТБ — предложение для пилота.</p>'
-      : '<div class="empty">Нет событий под этот фильтр.<br>Попробуйте другую категорию.</div>';
+      : state.q.trim()
+        ? '<div class="empty">По запросу «' + esc(state.q.trim()) + '» ничего не нашли.<br>Поиск учитывает опечатки и раскладку — попробуйте другое слово' + (state.cat !== "all" || state.fit ? ' или сбросьте фильтры' : '') + '.</div>'
+        : '<div class="empty">Нет событий под этот фильтр.<br>Попробуйте другую категорию.</div>';
   }
 
   /* ---------- Карточка события и покупка ---------- */
